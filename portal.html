@@ -7,7 +7,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; color: #2c3e50; }
+    body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; color: #2c3e50; }
     .app-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
     .card { background: white; border-radius: 24px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 24px; }
     .btn { background: #4544ab; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; }
@@ -39,88 +39,88 @@
 
   <script>
     // Initialize Supabase - Production Configuration
-    const supabase = window.supabase.createClient(
-      'https://vkcjwovhnmluzqkgqrbk.supabase.co',
-      'sb_publishable_d-klXw8ji6Q0lfm2T7rnTQ_c755YAT6'
+    const supabaseClient = window.supabase.createClient(
+      "https://vkcjwovhnmluzqkgqrbk.supabase.co",
+      "sb_publishable_d-klXw8ji6Q0lfm2T7rnTQ_c755YAT6"
     );
 
     // State management
     let currentUser = null;
-    let loginFlowState = 'initial';
+    let loginFlowState = "initial";
     let isLoading = false;
 
     // Production data functions - No demo data
     async function getUsers() {
       try {
-        const { data, error } = await supabase
-          .from('users')
-          .select('*');
+        const { data, error } = await supabaseClient
+          .from("users")
+          .select("*");
         
         if (error) {
-          console.error('Error fetching users:', error);
+          console.error("Error fetching users:", error);
           return [];
         }
         
         return data || [];
       } catch (error) {
-        console.error('Database error:', error);
+        console.error("Database error:", error);
         return [];
       }
     }
 
     async function getContributions() {
       try {
-        const { data, error } = await supabase
-          .from('contributions')
-          .select('*')
-          .eq('memberId', currentUser?.id);
+        const { data, error } = await supabaseClient
+          .from("contributions")
+          .select("*")
+          .eq("memberId", currentUser?.id);
         
         if (error) {
-          console.error('Error fetching contributions:', error);
+          console.error("Error fetching contributions:", error);
           return [];
         }
         
         return data || [];
       } catch (error) {
-        console.error('Database error:', error);
+        console.error("Database error:", error);
         return [];
       }
     }
 
     async function getLoans() {
       try {
-        const { data, error } = await supabase
-          .from('loans')
-          .select('*')
-          .eq('userId', currentUser?.id);
+        const { data, error } = await supabaseClient
+          .from("loans")
+          .select("*")
+          .eq("userId", currentUser?.id);
         
         if (error) {
-          console.error('Error fetching loans:', error);
+          console.error("Error fetching loans:", error);
           return [];
         }
         
         return data || [];
       } catch (error) {
-        console.error('Database error:', error);
+        console.error("Database error:", error);
         return [];
       }
     }
 
     async function getPayments() {
       try {
-        const { data, error } = await supabase
-          .from('payments')
-          .select('*')
-          .eq('userId', currentUser?.id);
+        const { data, error } = await supabaseClient
+          .from("payments")
+          .select("*")
+          .eq("userId", currentUser?.id);
         
         if (error) {
-          console.error('Error fetching payments:', error);
+          console.error("Error fetching payments:", error);
           return [];
         }
         
         return data || [];
       } catch (error) {
-        console.error('Database error:', error);
+        console.error("Database error:", error);
         return [];
       }
     }
@@ -129,23 +129,23 @@
     async function signInWithGoogle() {
       try {
         showLoading(true);
-        const { data, error } = await supabase.auth.signInWithOAuth({
-          provider: 'google',
+        const { data, error } = await supabaseClient.auth.signInWithOAuth({
+          provider: "google",
           options: {
-            redirectTo: window.location.origin + '/portal-production.html'
+            redirectTo: window.location.origin + "/portal.html"
           }
         });
 
         if (error) {
-          showMessage('Google sign-in failed: ' + error.message, 'error');
+          showMessage("Google sign-in failed: " + error.message, "error");
         } else {
           currentUser = data.user;
-          loginFlowState = 'initial';
-          showMessage('Successfully signed in with Google!', 'success');
+          loginFlowState = "initial";
+          showMessage("Successfully signed in with Google!", "success");
           setTimeout(() => render(), 1000);
         }
       } catch (error) {
-        showMessage('Authentication error: ' + error.message, 'error');
+        showMessage("Authentication error: " + error.message, "error");
       } finally {
         showLoading(false);
       }
@@ -154,32 +154,32 @@
     async function signInWithEmail(email, password) {
       try {
         showLoading(true);
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
           email,
           password
         });
 
         if (error) {
-          showMessage('Login failed: ' + error.message, 'error');
+          showMessage("Login failed: " + error.message, "error");
         } else {
           // Get user profile data
-          const { data: userData } = await supabase
-            .from('users')
-            .select('*')
-            .eq('email', email)
+          const { data: userData } = await supabaseClient
+            .from("users")
+            .select("*")
+            .eq("email", email)
             .single();
 
           if (userData) {
             currentUser = { ...data.user, ...userData };
-            loginFlowState = 'initial';
-            showMessage('Login successful!', 'success');
+            loginFlowState = "initial";
+            showMessage("Login successful!", "success");
             setTimeout(() => render(), 1000);
           } else {
-            showMessage('User profile not found. Please contact administrator.', 'error');
+            showMessage("User profile not found. Please contact administrator.", "error");
           }
         }
       } catch (error) {
-        showMessage('Authentication error: ' + error.message, 'error');
+        showMessage("Authentication error: " + error.message, "error");
       } finally {
         showLoading(false);
       }
@@ -188,44 +188,44 @@
     async function signUpWithEmail(userData) {
       try {
         showLoading(true);
-        const { data, error } = await supabase.auth.signUp({
+        const { data, error } = await supabaseClient.auth.signUp({
           email: userData.email,
           password: userData.password,
           options: {
             data: {
               full_name: userData.fullName,
-              role: userData.role || 'nonmember',
+              role: userData.role || "nonmember",
               phone: userData.phone
             }
           }
         });
 
         if (error) {
-          showMessage('Registration failed: ' + error.message, 'error');
+          showMessage("Registration failed: " + error.message, "error");
         } else {
           // Create user profile
-          const { error: profileError } = await supabase
-            .from('users')
+          const { error: profileError } = await supabaseClient
+            .from("users")
             .insert({
               id: data.user.id,
               email: userData.email,
               full_name: userData.fullName,
-              role: userData.role || 'nonmember',
+              role: userData.role || "nonmember",
               phone: userData.phone,
               created_at: new Date().toISOString()
             });
 
           if (profileError) {
-            showMessage('Profile creation failed: ' + profileError.message, 'error');
+            showMessage("Profile creation failed: " + profileError.message, "error");
           } else {
             currentUser = { ...data.user, ...userData };
-            loginFlowState = 'initial';
-            showMessage('Registration successful! Welcome to Koperasi Finance.', 'success');
+            loginFlowState = "initial";
+            showMessage("Registration successful! Welcome to Koperasi Finance.", "success");
             setTimeout(() => render(), 1000);
           }
         }
       } catch (error) {
-        showMessage('Registration error: ' + error.message, 'error');
+        showMessage("Registration error: " + error.message, "error");
       } finally {
         showLoading(false);
       }
@@ -233,16 +233,16 @@
 
     async function signOut() {
       try {
-        const { error } = await supabase.auth.signOut();
+        const { error } = await supabaseClient.auth.signOut();
         if (error) {
-          console.error('Sign out error:', error);
+          console.error("Sign out error:", error);
         }
         currentUser = null;
-        loginFlowState = 'initial';
-        showMessage('Logged out successfully!', 'success');
+        loginFlowState = "initial";
+        showMessage("Logged out successfully!", "success");
         setTimeout(() => render(), 1000);
       } catch (error) {
-        console.error('Sign out error:', error);
+        console.error("Sign out error:", error);
       }
     }
 
@@ -297,7 +297,7 @@
             <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
               <label style="display: flex; align-items: center; font-size: 0.9rem;">
                 <input type="checkbox" id="agreeTerms" style="margin-right: 8px;">
-                I agree to the Terms of Service and Privacy Policy
+                I agree to Terms of Service and Privacy Policy
               </label>
             </div>
             <button class="btn" onclick="handleSignUp()" style="margin-top: 20px; width: 100%;">Create Account</button>
@@ -312,8 +312,8 @@
         <div class="card">
           <button class="logout-btn" onclick="handleLogout()">← Logout</button>
           <div class="user-info-panel">
-            <div><strong>👤 ${currentUser?.user_metadata?.full_name || 'User'}</strong><br><span style="font-size:0.75rem;">${currentUser?.email || 'No email'}</span></div>
-            <div><span class="badge">${currentUser?.user_metadata?.role || 'Member'}</span></div>
+            <div><strong>👤 ${currentUser?.user_metadata?.full_name || "User"}</strong><br><span style="font-size:0.75rem;">${currentUser?.email || "No email"}</span></div>
+            <div><span class="badge">${currentUser?.user_metadata?.role || "Member"}</span></div>
           </div>
           <div id="dashboardContent">
             <div class="loading">
@@ -327,13 +327,13 @@
     }
 
     // Navigation functions
-    function showWelcome() { loginFlowState = 'initial'; clearMessage(); render(); }
-    function showEmailLogin() { loginFlowState = 'emailLogin'; clearMessage(); render(); }
-    function showSignUp() { loginFlowState = 'signUp'; clearMessage(); render(); }
+    function showWelcome() { loginFlowState = "initial"; clearMessage(); render(); }
+    function showEmailLogin() { loginFlowState = "emailLogin"; clearMessage(); render(); }
+    function showSignUp() { loginFlowState = "signUp"; clearMessage(); render(); }
 
     // Message functions
-    function showMessage(message, type = 'success') {
-      const messageArea = document.getElementById('messageArea');
+    function showMessage(message, type = "success") {
+      const messageArea = document.getElementById("messageArea");
       if (messageArea) {
         messageArea.innerHTML = `<div class="${type}">${message}</div>`;
         setTimeout(() => clearMessage(), 5000);
@@ -341,9 +341,9 @@
     }
 
     function clearMessage() {
-      const messageArea = document.getElementById('messageArea');
+      const messageArea = document.getElementById("messageArea");
       if (messageArea) {
-        messageArea.innerHTML = '';
+        messageArea.innerHTML = "";
       }
     }
 
@@ -358,11 +358,11 @@
     }
 
     async function handleEmailLogin() {
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value.trim();
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
       
       if (!email || !password) {
-        showMessage('Please enter both email and password.', 'error');
+        showMessage("Please enter both email and password.", "error");
         return;
       }
       
@@ -370,25 +370,25 @@
     }
 
     async function handleSignUp() {
-      const fullName = document.getElementById('signupFullName').value.trim();
-      const email = document.getElementById('signupEmail').value.trim();
-      const phone = document.getElementById('signupPhone').value.trim();
-      const password = document.getElementById('signupPassword').value;
-      const confirmPassword = document.getElementById('signupConfirmPassword').value;
-      const agreeTerms = document.getElementById('agreeTerms').checked;
+      const fullName = document.getElementById("signupFullName").value.trim();
+      const email = document.getElementById("signupEmail").value.trim();
+      const phone = document.getElementById("signupPhone").value.trim();
+      const password = document.getElementById("signupPassword").value;
+      const confirmPassword = document.getElementById("signupConfirmPassword").value;
+      const agreeTerms = document.getElementById("agreeTerms").checked;
       
       if (!fullName || !email || !phone || !password || !confirmPassword) {
-        showMessage('Please fill all required fields.', 'error');
+        showMessage("Please fill all required fields.", "error");
         return;
       }
       
       if (password !== confirmPassword) {
-        showMessage('Passwords do not match.', 'error');
+        showMessage("Passwords do not match.", "error");
         return;
       }
       
       if (!agreeTerms) {
-        showMessage('Please agree to the Terms of Service.', 'error');
+        showMessage("Please agree to Terms of Service.", "error");
         return;
       }
       
@@ -397,7 +397,7 @@
         email,
         phone,
         password,
-        role: 'member'
+        role: "member"
       });
     }
 
@@ -416,9 +416,9 @@
           getPayments()
         ]);
         
-        const activeLoan = loans.find(l => l.status === 'active');
+        const activeLoan = loans.find(l => l.status === "active");
         
-        const dashboardContent = document.getElementById('dashboardContent');
+        const dashboardContent = document.getElementById("dashboardContent");
         if (dashboardContent) {
           dashboardContent.innerHTML = `
             <h3>💰 Make Contribution</h3>
@@ -439,35 +439,35 @@
                   <button class="btn secondary" onclick="handleRepayment()">Repay</button>
                 </div>
               </div>
-            ` : '<p>✅ No active loan</p>'}
+            ` : "<p>✅ No active loan</p>"}
             <h3>📜 Recent Activity</h3>
             <table class="table">
               <tr><th>Date</th><th>Type</th><th>Amount</th></tr>
-              ${contributions.slice(-4).reverse().map(c=>`<tr><td>${new Date(c.created_at).toLocaleDateString()}</td><td>Contribution</td><td>$${c.amount}</td></tr>`).join('')}
-              ${payments.slice(-4).reverse().map(p=>`<tr><td>${new Date(p.created_at).toLocaleDateString()}</td><td>Loan Payment</td><td>$${p.amount}</td></tr>`).join('')}
+              ${contributions.slice(-4).reverse().map(c=>`<tr><td>${new Date(c.created_at).toLocaleDateString()}</td><td>Contribution</td><td>$${c.amount}</td></tr>`).join("")}
+              ${payments.slice(-4).reverse().map(p=>`<tr><td>${new Date(p.created_at).toLocaleDateString()}</td><td>Loan Payment</td><td>$${p.amount}</td></tr>`).join("")}
             </table>
           `;
         }
       } catch (error) {
-        console.error('Dashboard loading error:', error);
-        const dashboardContent = document.getElementById('dashboardContent');
+        console.error("Dashboard loading error:", error);
+        const dashboardContent = document.getElementById("dashboardContent");
         if (dashboardContent) {
-          dashboardContent.innerHTML = '<p style="color: #dc3545;">Error loading dashboard. Please try again.</p>';
+          dashboardContent.innerHTML = "<p style=\"color: #dc3545;\">Error loading dashboard. Please try again.</p>";
         }
       }
     }
 
     // Dashboard action handlers
     async function handleContribution() {
-      const amount = parseFloat(document.getElementById('contribAmt').value);
+      const amount = parseFloat(document.getElementById("contribAmt").value);
       if (amount <= 0) {
-        showMessage('Please enter a valid contribution amount.', 'error');
+        showMessage("Please enter a valid contribution amount.", "error");
         return;
       }
       
       try {
-        const { error } = await supabase
-          .from('contributions')
+        const { error } = await supabaseClient
+          .from("contributions")
           .insert({
             member_id: currentUser.id,
             amount: amount,
@@ -475,107 +475,107 @@
           });
 
         if (error) {
-          showMessage('Contribution failed: ' + error.message, 'error');
+          showMessage("Contribution failed: " + error.message, "error");
         } else {
-          showMessage(`Contribution of $${amount} recorded successfully!`, 'success');
-          document.getElementById('contribAmt').value = '';
+          showMessage(`Contribution of $${amount} recorded successfully!`, "success");
+          document.getElementById("contribAmt").value = "";
           await loadDashboardContent();
         }
       } catch (error) {
-        showMessage('Contribution error: ' + error.message, 'error');
+        showMessage("Contribution error: " + error.message, "error");
       }
     }
 
     async function handleLoan() {
-      const amount = parseFloat(document.getElementById('loanAmt').value);
+      const amount = parseFloat(document.getElementById("loanAmt").value);
       if (amount <= 0) {
-        showMessage('Please enter a valid loan amount.', 'error');
+        showMessage("Please enter a valid loan amount.", "error");
         return;
       }
       
       try {
-        const { error } = await supabase
-          .from('loans')
+        const { error } = await supabaseClient
+          .from("loans")
           .insert({
             user_id: currentUser.id,
             amount: amount,
             remaining_balance: amount,
-            status: 'active',
+            status: "active",
             date_taken: new Date().toISOString(),
             interest_rate: 0.08
           });
 
         if (error) {
-          showMessage('Loan application failed: ' + error.message, 'error');
+          showMessage("Loan application failed: " + error.message, "error");
         } else {
-          showMessage(`Loan application for $${amount} submitted successfully!`, 'success');
-          document.getElementById('loanAmt').value = '';
+          showMessage(`Loan application for $${amount} submitted successfully!`, "success");
+          document.getElementById("loanAmt").value = "";
           await loadDashboardContent();
         }
       } catch (error) {
-        showMessage('Loan application error: ' + error.message, 'error');
+        showMessage("Loan application error: " + error.message, "error");
       }
     }
 
     async function handleRepayment() {
-      const amount = parseFloat(document.getElementById('repayVal').value);
+      const amount = parseFloat(document.getElementById("repayVal").value);
       if (amount <= 0) {
-        showMessage('Please enter a valid repayment amount.', 'error');
+        showMessage("Please enter a valid repayment amount.", "error");
         return;
       }
       
       try {
         const loans = await getLoans();
-        const activeLoan = loans.find(l => l.status === 'active');
+        const activeLoan = loans.find(l => l.status === "active");
         
         if (!activeLoan) {
-          showMessage('No active loan found.', 'error');
+          showMessage("No active loan found.", "error");
           return;
         }
         
         // Add payment
-        const { error: paymentError } = await supabase
-          .from('payments')
+        const { error: paymentError } = await supabaseClient
+          .from("payments")
           .insert({
             loan_id: activeLoan.id,
             user_id: activeLoan.user_id,
             amount: amount,
             created_at: new Date().toISOString(),
-            payment_type: 'principal'
+            payment_type: "principal"
           });
 
         if (paymentError) {
-          showMessage('Payment failed: ' + paymentError.message, 'error');
+          showMessage("Payment failed: " + paymentError.message, "error");
           return;
         }
         
         // Update loan balance
         const newBalance = activeLoan.remaining_balance - amount;
-        const { error: updateError } = await supabase
-          .from('loans')
+        const { error: updateError } = await supabaseClient
+          .from("loans")
           .update({
             remaining_balance: newBalance,
-            status: newBalance <= 0 ? 'completed' : 'active'
+            status: newBalance <= 0 ? "completed" : "active"
           })
-          .eq('id', activeLoan.id);
+          .eq("id", activeLoan.id);
 
         if (updateError) {
-          showMessage('Loan update failed: ' + updateError.message, 'error');
+          showMessage("Loan update failed: " + updateError.message, "error");
         } else {
-          showMessage(`Repayment of $${amount} recorded successfully!`, 'success');
-          document.getElementById('repayVal').value = '';
+          showMessage(`Repayment of $${amount} recorded successfully!`, "success");
+          document.getElementById("repayVal").value = "";
           await loadDashboardContent();
         }
       } catch (error) {
-        showMessage('Repayment error: ' + error.message, 'error');
+        showMessage("Repayment error: " + error.message, "error");
       }
     }
 
     // Main render function
     async function render() {
-      const root = document.getElementById('appRoot');
+      const root = document.getElementById("appRoot");
       
-      if (loginFlowState === 'initial') {
+      if (loginFlowState === "initial") {
         if (currentUser) {
           root.innerHTML = renderDashboard();
           // Load dashboard content after rendering
@@ -583,9 +583,9 @@
         } else {
           root.innerHTML = renderWelcomeScreen();
         }
-      } else if (loginFlowState === 'emailLogin') {
+      } else if (loginFlowState === "emailLogin") {
         root.innerHTML = renderEmailLoginScreen();
-      } else if (loginFlowState === 'signUp') {
+      } else if (loginFlowState === "signUp") {
         root.innerHTML = renderSignUpScreen();
       }
     }
@@ -593,19 +593,19 @@
     // Check for existing session on load
     async function initializeApp() {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session } } = await supabaseClient.auth.getSession();
         
         if (session?.user) {
           currentUser = session.user;
-          loginFlowState = 'initial';
+          loginFlowState = "initial";
         } else {
-          loginFlowState = 'initial';
+          loginFlowState = "initial";
         }
         
         render();
       } catch (error) {
-        console.error('Initialization error:', error);
-        loginFlowState = 'initial';
+        console.error("Initialization error:", error);
+        loginFlowState = "initial";
         render();
       }
     }
