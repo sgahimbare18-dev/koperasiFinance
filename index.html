@@ -5,8 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Koperasi Finance - Redirect to Portal</title>
   <script>
-    // Redirect to portal immediately
-    window.location.href = "/portal.html";
+    // Handle routing for SPA
+    const path = window.location.pathname;
+    
+    if (path === '/' || path === '/index.html') {
+      // Redirect to portal for root access
+      window.location.replace('/portal.html');
+    } else if (path === '/portal' || path === '/portal/') {
+      // Redirect to portal.html for /portal path
+      window.location.replace('/portal.html');
+    } else {
+      // Default redirect to portal
+      window.location.replace('/portal.html');
+    }
   </script>
 </head>
 <body>
