@@ -818,8 +818,10 @@
             return;
         }
         
-        const rate = type === 'member' ? 0.08 : 0.12;
-        const totalInterest = amount * rate * months;
+        // Fix: Calculate annual interest properly (rate is annual, not monthly)
+        const annualRate = type === 'member' ? 0.08 : 0.12;
+        const monthlyRate = annualRate / 12;
+        const totalInterest = amount * annualRate; // Simple interest for the loan term
         const totalPayment = amount + totalInterest;
         const monthly = totalPayment / months;
         
