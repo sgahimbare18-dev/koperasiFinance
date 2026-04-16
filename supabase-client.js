@@ -142,8 +142,13 @@ export async function signInWithGoogle() {
   return data.user;
 }
 
+export async function signOut() {
+  const { error } = await supabase.auth.signOut();
 
-
+  if (error) {
+    throw new Error(`Sign out failed: ${error.message}`);
+  }
+}
 
 // Real-time subscriptions
 export function subscribeToTable(tableName, callback) {
