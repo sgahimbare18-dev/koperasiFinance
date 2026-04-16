@@ -1,5 +1,6 @@
 // Supabase Client Configuration
-import { createClient } from '@supabase/supabase-js';
+// For browser compatibility, we'll use CDN instead of ES6 modules
+const { createClient } = window.supabase;
 
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://vkcjwovhnmluzqkgqrbk.supabase.co';
@@ -121,15 +122,6 @@ export async function signIn(email, password) {
   return data.user;
 }
 
-export async function signUp(userData) {
-  const { data, error } = await supabase.auth.signUp(userData);
-
-  if (error) {
-    throw new Error(`Sign up failed: ${error.message}`);
-  }
-
-  return data.user;
-}
 
 export async function signInWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
@@ -150,31 +142,8 @@ export async function signInWithGoogle() {
   return data.user;
 }
 
-export async function signOut() {
-  const { error } = await supabase.auth.signOut();
 
-  if (error) {
-    throw new Error(`Sign out failed: ${error.message}`);
-  }
-}
 
-export async function signUp(userData) {
-  const { data, error } = await supabase.auth.signUp(userData);
-
-  if (error) {
-    throw new Error(`Sign up failed: ${error.message}`);
-  }
-
-  return data.user;
-}
-
-export async function signOut() {
-  const { error } = await supabase.auth.signOut();
-
-  if (error) {
-    throw new Error(`Sign out failed: ${error.message}`);
-  }
-}
 
 // Real-time subscriptions
 export function subscribeToTable(tableName, callback) {
