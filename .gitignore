@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment Variables
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build
+dist/
+build/
+
+# Cache
+.cache/
+.parcel-cache/
+
+# Testing
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Supabase
+supabase/.temp/.env
+token.txt
+config/local.env
+
+# Database credentials
+database-config.json
+db-credentials.json

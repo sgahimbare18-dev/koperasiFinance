@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="Koperasi Finance provides trusted loan solutions with transparent terms for members and non-members. Fast processing, fair rates, and community-focused lending.">
+    <title>Koperasi | Loans</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9eef3 100%);
+            color: #1a2c3e;
+            line-height: 1.5;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header / Navigation */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(0px);
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #4544ab;
+            letter-spacing: -0.5px;
+            transition: transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #626cd5;
+            box-shadow: 0 4px 12px rgba(97, 101, 199, 0.1);
+        }
+        .logo span {
+            color: #4544ab;
+        }
+        .logo:hover {
+            transform: scale(1.01);
+        }
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #2c4c6e;
+            font-weight: 500;
+            transition: 0.2s;
+            position: relative;
+        }
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #1a4d8c;
+            transition: width 0.2s;
+        }
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+        .nav-links a:hover {
+            color: #1a4d8c;
+        }
+        .btn-outline-nav {
+            background: transparent;
+            border: 1.5px solid #1a4d8c;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #1a4d8c;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-outline-nav:hover {
+            background: #1a4d8c;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(26,77,140,0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 70px 0 50px;
+        }
+        .hero h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0a2b44, #1a4d8c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+        }
+        .hero h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #2c4c6e;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            color: #4a627a;
+        }
+
+        /* Trust Banner */
+        .trust-banner {
+            background: white;
+            border-radius: 60px;
+            padding: 16px 32px;
+            margin: 32px 0 48px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #2c4c6e;
+            font-weight: 500;
+        }
+
+        /* Cards / Sections */
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 48px;
+            color: #0a2b44;
+            letter-spacing: -0.3px;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 32px;
+            margin: 48px 0;
+        }
+        .feature-card {
+            background: white;
+            padding: 32px 24px;
+            border-radius: 28px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            transition: transform 0.25s ease, box-shadow 0.2s;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+        }
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #1a4d8c;
+        }
+        .feature-card p {
+            color: #4a627a;
+            font-size: 0.95rem;
+        }
+
+        /* Value Proposition */
+        .value-proposition {
+            background: linear-gradient(115deg, #1a4d8c 0%, #0a2b44 100%);
+            border-radius: 32px;
+            padding: 52px 40px;
+            margin: 48px 0;
+            color: white;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+        }
+        .value-text {
+            flex: 2;
+        }
+        .value-text h2 {
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+        }
+        .value-text p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        .value-highlight {
+            flex: 1;
+            background: rgba(255,255,255,0.12);
+            border-radius: 24px;
+            padding: 28px;
+            text-align: center;
+            backdrop-filter: blur(4px);
+        }
+        .value-highlight .big-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+        .value-highlight .big-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #ffd166;
+        }
+
+        /* Calculator Section */
+        .calculator-wrapper {
+            background: white;
+            border-radius: 28px;
+            padding: 40px;
+            margin: 56px 0;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.04);
+            border: 1px solid #eef2f0;
+        }
+        .calc-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+        .input-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c4c6e;
+        }
+        .input-field input, .input-field select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #dce5e8;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            background: #fefefe;
+        }
+        .calc-result {
+            background: #f5f9f5;
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .calc-result .amount {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1a4d8c;
+        }
+        .btn-calc {
+            background: #1a4d8c;
+            color: white;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 60px;
+            font-weight: 600;
+            margin-top: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-calc:hover {
+            background: #0f3a62;
+            transform: translateY(-2px);
+        }
+
+        /* Testimonials */
+        .testimonial-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin: 56px 0;
+        }
+        .testimonial-item {
+            flex: 1;
+            background: white;
+            padding: 28px;
+            border-radius: 24px;
+            border-left: 5px solid #1a4d8c;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .testimonial-item .quote {
+            font-size: 1rem;
+            color: #3a5a78;
+            margin-bottom: 16px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+        .testimonial-item .name {
+            font-weight: 700;
+            color: #1a4d8c;
+        }
+
+        /* FAQ */
+        .faq-section {
+            margin: 56px 0;
+        }
+        .faq-item {
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            padding: 20px 24px;
+            cursor: pointer;
+            border: 1px solid #eef2f0;
+            transition: 0.2s;
+        }
+        .faq-item:hover {
+            border-color: #1a4d8c;
+        }
+        .faq-question {
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            color: #1a4d8c;
+        }
+        .faq-answer {
+            margin-top: 14px;
+            color: #6a7e98;
+            display: none;
+        }
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* How it works */
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px;
+            margin: 48px 0;
+        }
+        .step {
+            background: white;
+            border-radius: 60px;
+            padding: 16px 28px;
+            min-width: 180px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .step-number {
+            background: #1a4d8c;
+            color: white;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 60px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(115deg, #e8f0fe, #dce8f5);
+            border-radius: 32px;
+            padding: 56px 40px;
+            text-align: center;
+            margin: 56px 0;
+        }
+        .cta-section h3 {
+            font-size: 2rem;
+            color: #0a2b44;
+            margin-bottom: 16px;
+        }
+        .btn-final {
+            background: #1a4d8c;
+            color: white;
+            padding: 14px 48px;
+            border: none;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-top: 24px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-final:hover {
+            background: #0f3a62;
+            transform: translateY(-2px);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: white;
+            border-radius: 32px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+        .contact-details {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+            margin: 24px 0;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #2c4c6e;
+            font-weight: 500;
+        }
+
+        /* ========== BLACK FOOTER ========== */
+        .dark-footer {
+            background: #0a0c10;
+            color: #e0e4e9;
+            padding: 48px 0 32px;
+            margin-top: 40px;
+            border-top: none;
+            font-size: 0.9rem;
+        }
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 40px;
+            margin-bottom: 48px;
+        }
+        .footer-brand h3 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #4544ab;
+            margin-bottom: 12px;
+        }
+        .footer-brand span {
+            color: #4544ab;
+        }
+        .footer-brand p {
+            color: #b0b7c4;
+            line-height: 1.5;
+            margin-top: 8px;
+        }
+        .footer-links-col h4, .footer-contact-col h4 {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+        .footer-links-col ul, .footer-contact-col ul {
+            list-style: none;
+            padding: 0;
+        }
+        .footer-links-col li, .footer-contact-col li {
+            margin-bottom: 12px;
+        }
+        .footer-links-col a {
+            text-decoration: none;
+            color: #cbd2df;
+            transition: color 0.2s, transform 0.1s;
+            display: inline-block;
+        }
+        .footer-links-col a:hover {
+            color: #ffffff;
+            transform: translateX(3px);
+        }
+        .footer-contact-col li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #cbd2df;
+        }
+        .social-icons-dark {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+        }
+        .social-icons-dark span {
+            background: #1e2229;
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #e0e4e9;
+        }
+        .social-icons-dark span:hover {
+            background: #1a4d8c;
+            transform: translateY(-3px);
+            color: white;
+        }
+        .footer-bottom {
+            border-top: 1px solid #23272e;
+            padding-top: 28px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #8e96a3;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+        .footer-bottom .legal-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .footer-bottom .legal-links a {
+            color: #9aa3b2;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-bottom .legal-links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        .small-print {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 16px;
+            text-align: center;
+            width: 100%;
+        }
+
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero h3 { font-size: 1.2rem; }
+            .section-title { font-size: 1.6rem; }
+            .nav-container { flex-direction: column; }
+            .contact-details { gap: 20px; flex-direction: column; align-items: center; }
+            .value-proposition { flex-direction: column; text-align: center; }
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<div class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="logo">
+            <img src="https://i.postimg.cc/fRm14xvT/Gemini-Generated-Image-5xmfw25xmfw25xmf.png" alt="Koperasi Finance" class="logo-img">
+            <span>KoperasiFinance</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="loans.html" class="active">Loans</a>
+            <a href="members.html">Members</a>
+            <a href="contact.html">Contact</a>
+            <button class="btn-outline-nav" id="portalBtn">Access Portal →</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Borrow smarter, not harder</h1>
+        <h3>Fast. Fair. Transparent.</h3>
+        <p>Get the funding you need with clear terms, no hidden fees, and a process that respects your time.</p>
+    </div>
+
+    <!-- Trust Banner -->
+    <div class="trust-banner">
+        <div class="trust-item">🔒 Bank-level security</div>
+        <div class="trust-item">⚡ 24-hour average approval</div>
+        <div class="trust-item">📱 100% digital process</div>
+        <div class="trust-item">⭐ 4.9/5 from 500+ borrowers</div>
+    </div>
+
+    <!-- Why Choose Us -->
+    <h2 class="section-title">Why borrowers love us</h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Lightning Fast</h3>
+            <p>From application to approval in hours. We know you need funds quickly.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔓</div>
+            <h3>Complete Transparency</h3>
+            <p>No hidden fees, no prepayment penalties. What you see is what you pay.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🤝</div>
+            <h3>Relationship Powered</h3>
+            <p>Returning clients get better terms, higher limits, and priority service.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Profit Sharing</h3>
+            <p>Members earn from the collective interest pool every 11 months.</p>
+        </div>
+    </div>
+
+    <!-- Value Proposition -->
+    <div class="value-proposition">
+        <div class="value-text">
+            <h2>More than just a loan</h2>
+            <p>We're a cooperative built on trust, fairness, and long-term relationships. Members benefit from profit sharing, while all borrowers enjoy transparent terms and no hidden fees.</p>
+        </div>
+        <div class="value-highlight">
+            <div class="big-icon">🏆</div>
+            <div class="big-number">98%</div>
+            <div>Approval rate</div>
+            <div style="margin-top: 8px; font-size: 0.85rem;">⭐ Would recommend to a friend</div>
+        </div>
+    </div>
+
+    <!-- Loan Calculator -->
+    <div class="calculator-wrapper">
+        <h2 class="section-title">📊 Estimate your payment</h2>
+        <div class="calc-row">
+            <div class="input-field">
+                <label>💰 Loan amount ($)</label>
+                <input type="number" id="loanAmount" value="1500" placeholder="Amount">
+            </div>
+            <div class="input-field">
+                <label>👤 Borrower type</label>
+                <select id="borrowerType">
+                    <option value="member">Member (preferred rates)</option>
+                    <option value="nonmember">Non-member (standard rates)</option>
+                </select>
+            </div>
+            <div class="input-field">
+                <label>📅 Duration (months)</label>
+                <input type="number" id="months" value="6" placeholder="Months">
+            </div>
+        </div>
+        <button class="btn-calc" id="calcBtn">Calculate my payment →</button>
+        <div id="resultBox" class="calc-result" style="display: none;">
+            <div>Estimated monthly payment</div>
+            <div class="amount" id="monthlyPayment">$0</div>
+                    </div>
+    </div>
+
+    <!-- How It Works -->
+    <h2 class="section-title">How It Works</h2>
+    <div class="steps">
+        <div class="step"><span class="step-number">1</span> Apply online</div>
+        <div class="step"><span class="step-number">2</span> Quick review</div>
+        <div class="step"><span class="step-number">3</span> Sign digitally</div>
+        <div class="step"><span class="step-number">4</span> Get funded</div>
+    </div>
+    <p style="text-align: center; color: #4a627a; margin-top: -20px;">Submit your request → We review → Digital contract → Funds in your account</p>
+
+    <!-- Testimonials -->
+    <h2 class="section-title">Real stories, real results</h2>
+    <div class="testimonial-row">
+        <div class="testimonial-item">
+            <div class="quote">"I was approved in under 12 hours. The process was smooth, and the team actually answered my questions. Highly recommend."</div>
+            <div class="name">— Aisha N., University Student</div>
+        </div>
+        <div class="testimonial-item">
+            <div class="quote">"As a non-member, I appreciated the clear contract and digital signature. Very professional and trustworthy."</div>
+            <div class="name">— James M., Small Business Owner</div>
+        </div>
+        <div class="testimonial-item">
+            <div class="quote">"The profit sharing for members is a game-changer. My contributions earn me dividends. Best financial decision I've made."</div>
+            <div class="name">— Linda K., Member since 2024</div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <h2 class="section-title">Frequently asked questions</h2>
+    <div class="faq-section">
+        <div class="faq-item">
+            <div class="faq-question"><span>How fast can I get the money?</span><span>▼</span></div>
+            <div class="faq-answer">Members often receive funds within 24 hours after approval. Non-members typically 2-3 business days due to collateral verification.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question"><span>Can I pay off my loan early?</span><span>▼</span></div>
+            <div class="faq-answer">Absolutely. No penalties, no extra fees. You only pay interest for the time you actually borrowed the money.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question"><span>What documents do I need to apply?</span><span>▼</span></div>
+            <div class="faq-answer">Government ID, proof of income (or student status), and collateral documents for non-members. Members have reduced requirements.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question"><span>How does profit sharing work for members?</span><span>▼</span></div>
+            <div class="faq-answer">Every 11 months, all interest collected from loans is distributed among members based on their contribution percentage.</div>
+        </div>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="cta-section">
+        <h3>Ready to take the next step?</h3>
+        <p>Join hundreds of satisfied borrowers who've found a better way to borrow.</p>
+        <button class="btn-final" id="finalApplyBtn">Access your account →</button>
+        <p style="margin-top: 20px; font-size: 0.8rem;">✨ Free to check your eligibility. No obligation.</p>
+    </div>
+
+</div>
+
+<!-- ========== BLACK/DARK FOOTER SECTION ========== -->
+<footer class="dark-footer">
+    <div class="footer-container">
+        <div class="footer-grid">
+            <!-- Brand Column -->
+            <div class="footer-brand">
+                <h3>Koperasi<span>Finance</span></h3>
+                <p>Empowering financial growth with trust, integrity, and community-focused lending solutions since 2023.</p>
+                <div class="social-icons-dark">
+                    <span>f</span>
+                    <span>t</span>
+                    <span>i</span>
+                    <span>in</span>
+                </div>
+            </div>
+            <!-- Quick Links -->
+            <div class="footer-links-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="loans.html">Loans</a></li>
+                    <li><a href="members.html">Members</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <!-- Resources -->
+            <div class="footer-links-col">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#" data-footer="privacy">Privacy Policy</a></li>
+                    <li><a href="#" data-footer="terms">Terms of Service</a></li>
+                    <li><a href="#" data-footer="complaints">Complaints Procedure</a></li>
+                    <li><a href="#" data-footer="calculator">Loan Calculator</a></li>
+                </ul>
+            </div>
+            <!-- Contact -->
+            <div class="footer-contact-col">
+                <h4>Get in Touch</h4>
+                <ul>
+                    <li> Nairobi, Kenya | Thika Road</li>
+                    <li> +254743409438</li>
+                    <li> ahishakiyenaomi56@gmail.com</li>
+                    <li> Mon-Fri: 8:30 AM - 5:00 PM</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div> 2025 Koperasi Student Cooperative - All rights reserved.</div>
+            <div class="legal-links">
+                <a href="#" data-footer="privacy">Privacy</a>
+                <a href="#" data-footer="terms">Terms</a>
+                <a href="#" data-footer="accessibility">Accessibility</a>
+            </div>
+        </div>
+        <div class="small-print">
+            Koperasi Finance is a regulated SACCO. Loan approval subject to credit assessment and terms. Interest rates subject to change. We promote responsible borrowing.
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Calculator logic
+    function calculateLoan() {
+        const amount = parseFloat(document.getElementById('loanAmount').value);
+        const type = document.getElementById('borrowerType').value;
+        const months = parseInt(document.getElementById('months').value);
+        
+        if (isNaN(amount) || isNaN(months) || amount <= 0 || months <= 0) {
+            document.getElementById('resultBox').style.display = 'none';
+            return;
+        }
+        
+        const rate = type === 'member' ? 0.08 : 0.12;
+        const totalInterest = amount * rate * months;
+        const totalPayment = amount + totalInterest;
+        const monthly = totalPayment / months;
+        
+        document.getElementById('monthlyPayment').innerText = `$${monthly.toFixed(2)}`;
+        document.getElementById('totalInterest').innerText = `$${totalInterest.toFixed(2)}`;
+        document.getElementById('resultBox').style.display = 'block';
+    }
+    
+    document.getElementById('calcBtn')?.addEventListener('click', calculateLoan);
+    document.getElementById('loanAmount')?.addEventListener('input', calculateLoan);
+    document.getElementById('borrowerType')?.addEventListener('change', calculateLoan);
+    document.getElementById('months')?.addEventListener('input', calculateLoan);
+    
+    // Portal button
+    document.getElementById('portalBtn')?.addEventListener('click', () => {
+        window.location.href = 'portal.html';
+    });
+    
+    // Final apply button
+    document.getElementById('finalApplyBtn')?.addEventListener('click', () => {
+        window.location.href = 'portal.html';
+    });
+    
+    // FAQ toggle
+    document.querySelectorAll('.faq-item').forEach(item => {
+        item.addEventListener('click', () => {
+            item.classList.toggle('active');
+        });
+    });
+    
+    // Footer link interactions
+    const footerLinkElements = document.querySelectorAll('.footer-links-col a, .footer-bottom .legal-links a');
+    footerLinkElements.forEach(link => {
+        link.addEventListener('click', (e) => {
+            const type = link.getAttribute('data-footer');
+            const messages = {
+                about: "Koperasi Finance: A member-owned cooperative offering fair loans and profit sharing. Building financial resilience.",
+                loans: "Loan Programs: Non-member and Member plans available. Flexible repayment terms up to 12 months.",
+                membership: "Membership: Join with low registration fee, enjoy lower interest rates and annual dividends.",
+                faq: "FAQs: Minimum loan amount $100. No hidden fees. Early repayment allowed without penalty.",
+                privacy: "Privacy Policy: Your data is protected under Kenyan law. We never share personal info without consent.",
+                terms: "Terms: All loans subject to approval. Late fees apply after grace period.",
+                complaints: "Complaints: Contact our support desk +254 700 123 456 or complaints@koperasi.co.ke",
+                calculator: "Loan Calculator: Use the calculator above to estimate monthly payments and total interest.",
+                careers: "Careers: We're hiring! Send your CV to careers@koperasi.co.ke",
+                accessibility: "Accessibility: Our offices and website are WCAG compliant. Need assistance? Call us."
+            };
+            alert(messages[type] || "Visit our official website or contact support for more details.");
+        });
+    });
+    
+    // Social icons
+    document.querySelectorAll('.social-icons-dark span').forEach(icon => {
+        icon.style.cursor = 'pointer';
+        icon.addEventListener('click', () => alert("🌐 Follow Koperasi Finance for updates, financial tips, and member events."));
+    });
+    
+        
+    setTimeout(() => calculateLoan(), 100);
+</script>
+</body>
+</html>

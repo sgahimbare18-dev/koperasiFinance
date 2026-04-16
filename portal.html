@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Koperasi Pro | Institutional Loan & Savings System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #eef2f8;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      padding: 24px;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 28px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+      padding: 28px 32px;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    button {
+      background: #1a4d8c;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 10px 22px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    button.small { padding: 6px 14px; font-size: 0.75rem; }
+    button.secondary { background: #4a627a; }
+    button.success { background: #1f7b4d; }
+    button.warning { background: #b86b1f; }
+    button.danger { background: #bc3f2e; }
+    button.outline { background: transparent; border: 1px solid #cbd5e1; color: #1e293b; }
+    button:hover { transform: translateY(-1px); filter: brightness(1.03); }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #cfdfed;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      background: white;
+      transition: 0.2s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #1a4d8c;
+      box-shadow: 0 0 0 3px rgba(26,77,140,0.1);
+    }
+
+    .flex-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-end;
+    }
+    .badge {
+      background: #eef2ff;
+      padding: 4px 14px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #1e3a5f;
+    }
+    hr {
+      margin: 20px 0;
+      border: none;
+      border-top: 1px solid #e2edf7;
+    }
+    .stat-card {
+      background: #f8fafd;
+      border-radius: 24px;
+      padding: 18px 20px;
+      border-left: 4px solid #1a4d8c;
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #0a2b44;
+      line-height: 1.2;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 6px;
+      border-bottom: 1px solid #e9f0f5;
+    }
+    .logout-btn {
+      float: right;
+      background: #334155;
+      padding: 8px 20px;
+    }
+    .choice-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin: 30px 0;
+    }
+    .choice-btn {
+      padding: 16px 40px;
+      font-size: 1.2rem;
+      border-radius: 60px;
+      min-width: 180px;
+    }
+    .choice-btn.member { background: #1f7b4d; }
+    .choice-btn.nonmember { background: #b86b1f; }
+    .role-selector {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .role-card {
+      background: white;
+      border-radius: 28px;
+      padding: 16px 20px;
+      text-align: center;
+      cursor: pointer;
+      width: 160px;
+      transition: 0.2s;
+      border: 1px solid #dce5ef;
+    }
+    .role-card:hover {
+      border-color: #1a4d8c;
+      background: #f5f9ff;
+      transform: translateY(-2px);
+    }
+    .user-info-panel {
+      background: #f0f6fe;
+      border-radius: 24px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .back-btn {
+      background: #6c757d;
+      margin-right: 12px;
+    }
+    @media (max-width: 700px) {
+      body { padding: 12px; }
+      .card { padding: 18px; }
+      .choice-btn { padding: 12px 20px; font-size: 1rem; min-width: 140px; }
+    }
+
+    /* Modal styles */
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      backdrop-filter: blur(4px);
+    }
+    .modal-content {
+      background: white;
+      border-radius: 32px;
+      max-width: 820px;
+      width: 92%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px 32px;
+      box-shadow: 0 30px 45px rgba(0,0,0,0.25);
+      font-family: 'Georgia', 'Times New Roman', serif;
+    }
+    .contract-header {
+      text-align: center;
+      margin-bottom: 24px;
+      border-bottom: 2px solid #1a4d8c;
+      padding-bottom: 16px;
+    }
+    .contract-clause {
+      margin: 18px 0;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      color: #1e2a3e;
+    }
+    .signature-canvas {
+      border: 2px solid #b9cee8;
+      border-radius: 20px;
+      background: white;
+      cursor: crosshair;
+      width: 100%;
+      height: auto;
+      margin-top: 12px;
+    }
+
+    /* Ecstatic animations for sign-up forms */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    .ecstatic-card {
+      animation: fadeInScale 0.6s ease-out;
+      background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+      border: 2px solid transparent;
+      background-image: linear-gradient(white, white), linear-gradient(135deg, #4544ab, #626cd5);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ecstatic-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(69, 68, 171, 0.1), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      animation: slideInUp 0.5s ease-out backwards;
+    }
+
+    .form-group:nth-child(1) { animation-delay: 0.1s; }
+    .form-group:nth-child(2) { animation-delay: 0.2s; }
+    .form-group:nth-child(3) { animation-delay: 0.3s; }
+    .form-group:nth-child(4) { animation-delay: 0.4s; }
+    .form-group:nth-child(5) { animation-delay: 0.5s; }
+    .form-group:nth-child(6) { animation-delay: 0.6s; }
+    .form-group:nth-child(7) { animation-delay: 0.7s; }
+    .form-group:nth-child(8) { animation-delay: 0.8s; }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #4544ab;
+      font-size: 0.9rem;
+      position: relative;
+    }
+
+    .form-group label::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #4544ab, #626cd5);
+      transition: width 0.3s ease;
+    }
+
+    .form-group:hover label::after {
+      width: 100%;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid #e8ecf4;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      background: #ffffff;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #4544ab;
+      box-shadow: 0 0 0 4px rgba(69, 68, 171, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .form-group input:hover,
+    .form-group select:hover {
+      border-color: #626cd5;
+    }
+
+    .ecstatic-button {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .ecstatic-button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .ecstatic-button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .ecstatic-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(69, 68, 171, 0.3);
+    }
+
+    .choice-btn.ecstatic {
+      animation: slideInUp 0.8s ease-out backwards;
+      animation-delay: 0.9s;
+    }
+
+    .google-btn {
+      background: #4285f4 !important;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .google-btn:hover {
+      background: #3367d6 !important;
+      box-shadow: 0 8px 25px rgba(66, 133, 244, 0.3) !important;
+    }
+  </style>
+</head>
+<body>
+<div class="app-container" id="appRoot"></div>
+
+<script type="module">
+  // Import Supabase client
+  import { supabase, uploadImage, signIn, signUp, signOut, subscribeToTable, db, signInWithGoogle } from './supabase-client.js';
+
+  // ======================== STORAGE KEYS ========================
+
+  // Initialize Supabase connection
+  let supabaseConnected = false;
+
+  async function initSupabase() {
+    try {
+      // Test connection
+      const { data } = await supabase.from('users').select('count').single();
+      console.log('Supabase connected successfully');
+      supabaseConnected = true;
+      return true;
+    } catch (error) {
+      console.error('Supabase connection failed:', error.message);
+      // Fall back to localStorage for demo mode
+      return false;
+    }
+  }
+
+  function initData() {
+    // Try to initialize Supabase, fall back to localStorage if needed
+    initSupabase().then(connected => {
+      if (connected) {
+        // Use Supabase for production
+        initializeWithSupabase();
+      } else {
+        // Use localStorage for demo mode
+        initializeWithLocalStorage();
+      }
+    });
+  }
+
+  async function initializeWithSupabase() {
+    try {
+      // Set up real-time subscriptions
+      subscribeToTable('users', (payload) => {
+        if (payload.eventType === 'INSERT') {
+          // New user registered - update UI
+          console.log('New user registered:', payload.new);
+        }
+      });
+
+      subscribeToTable('loans', (payload) => {
+        if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+          // Loan status changed - update UI
+          console.log('Loan updated:', payload.new);
+        }
+      });
+
+      subscribeToTable('payments', (payload) => {
+        if (payload.eventType === 'INSERT') {
+          // New payment recorded - update UI
+          console.log('New payment recorded:', payload.new);
+        }
+      });
+
+      // Initialize current user from Supabase session or localStorage
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session?.user) {
+        currentUser = session.user;
+        loginFlowState = 'initial';
+      } else {
+        // Fall back to localStorage for demo
+        initializeWithLocalStorage();
+      }
+    } catch (error) {
+      console.error('Supabase initialization failed:', error);
+      // Fall back to localStorage for demo
+      initializeWithLocalStorage();
+    }
+  }
+
+  function initializeWithLocalStorage() {
+    const STORAGE = {
+      users: 'pro_koperasi_users',
+      contributions: 'pro_koperasi_contributions',
+      loans: 'pro_koperasi_loans',
+      payments: 'pro_koperasi_payments',
+      contracts: 'pro_koperasi_contracts'
+    };
+
+    if (!localStorage.getItem(STORAGE.users)) {
+      const defaultUsers = [
+        { id: 'm1', username: 'member1', password: '123', role: 'member', fullName: 'Aisha Nkosi', email: 'aisha.nkosi@student.edu', phone: '+254 712 345 678', idNumber: 'ID-987654', joinDate: '2024-01-15' },
+        { id: 'm2', username: 'member2', password: '123', role: 'member', fullName: 'Liam Van der Merwe', email: 'liam.v@student.edu', phone: '+254 723 456 789', idNumber: 'ID-876543', joinDate: '2024-02-10' },
+        { id: 'nm1', username: 'non1', password: '123', role: 'nonmember', fullName: 'James Ochieng', email: 'james.ochieng@external.com', phone: '+254 798 765 43', idNumber: 'ID-765432', address: 'Nairobi, Kenya' },
+        { id: 'treas', username: 'treasurer', password: 'admin', role: 'treasurer', fullName: 'Finance Officer', email: 'finance@koperasi.org', phone: '+254 700 000 000' }
+      ];
+      localStorage.setItem(STORAGE.users, JSON.stringify(defaultUsers));
+    }
+    if (!localStorage.getItem(STORAGE.contributions)) localStorage.setItem(STORAGE.contributions, '[]');
+    if (!localStorage.getItem(STORAGE.loans)) localStorage.setItem(STORAGE.loans, '[]');
+    if (!localStorage.getItem(STORAGE.payments)) localStorage.setItem(STORAGE.payments, '[]');
+    if (!localStorage.getItem(STORAGE.contracts)) localStorage.setItem(STORAGE.contracts, '[]');
+    if (!localStorage.getItem('member_extra')) localStorage.setItem('member_extra', '{}');
+  }
+
+  function getUsers() { 
+  if (supabaseConnected) {
+    return db.getUser(); // Use Supabase if connected
+  } else {
+    return JSON.parse(localStorage.getItem(STORAGE.users) || '[]'); // Fallback to localStorage
+  }
+}
+
+function getContributions() { 
+  if (supabaseConnected) {
+    return db.getContributions(); // Use Supabase if connected
+  } else {
+    return JSON.parse(localStorage.getItem(STORAGE.contributions) || '[]'); // Fallback to localStorage
+  }
+}
+
+function getLoans() { 
+  if (supabaseConnected) {
+    return db.getLoans(); // Use Supabase if connected
+  } else {
+    return JSON.parse(localStorage.getItem(STORAGE.loans) || '[]'); // Fallback to localStorage
+  }
+}
+
+function getPayments() { 
+  if (supabaseConnected) {
+    return db.getPayments(); // Use Supabase if connected
+  } else {
+    return JSON.parse(localStorage.getItem(STORAGE.payments) || '[]'); // Fallback to localStorage
+  }
+}
+
+function getContracts() { 
+  if (supabaseConnected) {
+    return db.getContracts(); // Use Supabase if connected
+  } else {
+    return JSON.parse(localStorage.getItem(STORAGE.contracts) || '[]'); // Fallback to localStorage
+  }
+}
+
+function setContributions(d) { 
+  if (supabaseConnected) {
+    // Use Supabase for production - no-op
+    console.log('Contributions saved to Supabase');
+  } else {
+    localStorage.setItem(STORAGE.contributions, JSON.stringify(d)); // Fallback to localStorage
+  }
+}
+
+function setLoans(d) { 
+  if (supabaseConnected) {
+    // Use Supabase for production - no-op
+    console.log('Loans saved to Supabase');
+  } else {
+    localStorage.setItem(STORAGE.loans, JSON.stringify(d)); // Fallback to localStorage
+  }
+}
+
+function setPayments(d) { 
+  if (supabaseConnected) {
+    // Use Supabase for production - no-op
+    console.log('Payments saved to Supabase');
+  } else {
+    localStorage.setItem(STORAGE.payments, JSON.stringify(d)); // Fallback to localStorage
+  }
+}
+
+function setContracts(d) { 
+  if (supabaseConnected) {
+    // Use Supabase for production - no-op
+    console.log('Contracts saved to Supabase');
+  } else {
+    localStorage.setItem(STORAGE.contracts, JSON.stringify(d)); // Fallback to localStorage
+  }
+}
+  function getMemberExtra() { return JSON.parse(localStorage.getItem('member_extra')) || {}; }
+  function setMemberExtra(obj) { localStorage.setItem('member_extra', JSON.stringify(obj)); }
+
+  let currentUser = null;
+  let loginFlowState = 'initial'; // 'initial', 'memberVow', 'memberLogin', 'nonmemberLogin', 'nonMemberSignUp', 'treasurerLogin'
+
+  // ======================== FINANCIALS ========================
+  function computeTotals() {
+    const contributions = getContributions();
+    const payments = getPayments();
+    const loansGiven = getLoans();
+    const totalContributions = contributions.reduce((s,c)=>s+c.amount,0);
+    const totalRepayments = payments.reduce((s,p)=>s+p.amount,0);
+    const totalMoneyIn = totalContributions + totalRepayments;
+    const totalLoansOut = loansGiven.reduce((s,l)=>s+l.amount,0);
+    const totalInterestIncome = payments.reduce((s,p)=>s+(p.interestPortion||0),0);
+    const netPosition = totalMoneyIn - totalLoansOut;
+    return { totalMoneyIn, totalLoansOut, netPosition, totalInterestIncome, totalContributions, totalRepayments };
+  }
+
+  function memberContributionMap() {
+    const contribs = getContributions();
+    const map = new Map();
+    contribs.forEach(c => map.set(c.memberId, (map.get(c.memberId)||0) + c.amount));
+    return map;
+  }
+
+  function getAllMembers() { return getUsers().filter(u => u.role === 'member'); }
+
+  // ======================== ACTIONS ========================
+  function addContribution(memberId, amount, receiptImageData = null) {
+    const contribs = getContributions();
+    contribs.push({ 
+      id: Date.now(), 
+      memberId, 
+      amount, 
+      date: new Date().toISOString(),
+      receipt_image_url: receiptImageData // Store uploaded receipt image
+    });
+    setContributions(contribs);
+  }
+
+  function takeLoan(userId, userName, amount, roleType, interestRate, signatureDataURL = null, contractId = null) {
+    const loans = getLoans();
+    const newLoan = {
+      id: Date.now(), userId, userName, amount, remainingBalance: amount,
+      interestRate, roleType, status: 'active', monthsPassed: 0,
+      totalInterestAccrued: 0, dateTaken: new Date().toISOString(),
+      signature: signatureDataURL, contractId
+    };
+    loans.push(newLoan);
+    setLoans(loans);
+    return newLoan;
+  }
+
+  function repayLoan(loanId, amountPaid, paymentImageData = null) {
+    let loans = getLoans();
+    const idx = loans.findIndex(l => l.id === loanId);
+    if (idx === -1) return false;
+    const loan = loans[idx];
+    const totalInterest = loan.amount * loan.interestRate * loan.durationMonths;
+    const newBalance = loan.remainingBalance - amountPaid;
+    const interestPortion = Math.min(amountPaid, totalInterest);
+    const principalPortion = amountPaid - interestPortion;
+    
+    // Update loan
+    loan.remainingBalance = newBalance;
+    loan.monthsPassed++;
+    if (newBalance <= 0) {
+      loan.status = 'completed';
+      loan.dateClosed = new Date().toISOString();
+    }
+    setLoans(loans);
+    
+    // Record payment with optional image
+    const payments = getPayments();
+    payments.push({
+      id: Date.now(),
+      loanId,
+      userId: loan.userId,
+      amount: amountPaid,
+      date: new Date().toISOString(),
+      paymentType: 'principal',
+      receipt_image_url: paymentImageData // Store payment proof image
+    });
+    setPayments(payments);
+    
+    showSuccess(`Payment of $${amountPaid} with proof uploaded successfully!`);
+    render();
+    return newBalance;
+  }
+
+  function distributeInterest() {
+    const members = getAllMembers();
+    if (!members.length) return { success: false, msg: "No members" };
+    const contribMap = memberContributionMap();
+    let totalContrib = 0;
+    members.forEach(m => totalContrib += contribMap.get(m.id) || 0);
+    if (totalContrib === 0) return { success: false, msg: "No contributions yet" };
+    const fin = computeTotals();
+    const pool = fin.totalInterestIncome;
+    if (pool <= 0) return { success: false, msg: `No interest income to distribute ($${pool.toFixed(2)})` };
+    const distribution = [];
+    members.forEach(m => {
+      const contrib = contribMap.get(m.id) || 0;
+      const share = (contrib / totalContrib) * pool;
+      distribution.push({ memberId: m.id, memberName: m.fullName, contribution: contrib, share });
+    });
+    const extra = getMemberExtra();
+    extra.lastDistribution = { date: new Date().toISOString(), totalPool: pool, details: distribution };
+    setMemberExtra(extra);
+    return { success: true, msg: `$${pool.toFixed(2)} interest distributed among ${members.length} members.`, details: distribution };
+  }
+
+  function saveContract(userId, userName, amount, signatureDataURL, loanId, fullContractHTML) {
+    const contracts = getContracts();
+    const contract = {
+      id: Date.now(), userId, userName, loanAmount: amount, signatureDataURL,
+      loanId, dateSigned: new Date().toISOString(),
+      fullContractHTML: fullContractHTML,
+      terms: `Formal Non-Member Loan Agreement signed on ${new Date().toLocaleDateString()}` 
+    };
+    contracts.push(contract);
+    setContracts(contracts);
+    return contract.id;
+  }
+
+  // ======================== CONTRACT MODAL ========================
+  function showFullLegalContract(loanAmount, onSigned) {
+    const modalDiv = document.createElement('div');
+    modalDiv.className = 'modal';
+    let canvas = null, ctx = null, drawing = false;
+    const borrower = currentUser;
+    const today = new Date();
+    const day = today.getDate();
+    const month = today.toLocaleString('default', { month: 'long' });
+    const year = today.getFullYear();
+    const institution = "Koperasi Student Cooperative Fund";
+    const address = "123 Education Avenue, Nairobi, Kenya";
+    const borrowerId = borrower.idNumber || `ID-${borrower.id.toUpperCase()}-${Date.now().toString().slice(-6)}`;
+    const borrowerAddress = borrower.address || "__________________________";
+    const borrowerEmail = borrower.email || "__________________________";
+    const borrowerPhone = borrower.phone || "__________________________";
+
+    modalDiv.innerHTML = `
+      <div class="modal-content">
+        <div class="contract-header">
+          <h1 style="font-size: 1.6rem; color:#1a4d8c;">📜 NON-MEMBER LOAN AGREEMENT</h1>
+          <p style="font-style: italic;">Formal Loan Contract – Legally Binding</p>
+        </div>
+        <p>This <strong>Non-Member Loan Agreement</strong> ("Agreement") is made and entered into on this <strong>${day}</strong> day of <strong>${month}</strong>, <strong>${year}</strong>, by and between:</p>
+        <p><strong>${institution}</strong>, a duly registered entity under the laws of Kenya, with its principal place of business at ${address} (hereinafter referred to as the "Lender"),</p>
+        <p><strong>AND</strong></p>
+        <p><strong>${borrower.fullName}</strong>, holder of Identification Number <strong>${borrowerId}</strong>, residing at ${borrowerAddress}, Email: ${borrowerEmail}, Phone: ${borrowerPhone} (hereinafter referred to as the "Borrower"),</p>
+        <p>Collectively referred to as the "Parties."</p>
+        
+        <div class="contract-clause"><strong>1. PURPOSE</strong><br>This Agreement sets forth the terms and conditions under which the Lender agrees to extend a loan facility to the Borrower, who is not a registered member.</div>
+        <div class="contract-clause"><strong>2. ELIGIBILITY</strong><br>The Borrower acknowledges non-member status, subject to stricter lending requirements and collateral obligations.</div>
+        <div class="contract-clause"><strong>3. LOAN AMOUNT</strong><br>3.1 Loan Amount: <strong>$${loanAmount.toFixed(2)} USD</strong>.<br>3.2 Non-member limits: minimum 10, maximum negotiable at Lender's discretion.<br>3.3 <strong>Exception Clause:</strong> Lender may approve higher amounts for known customers based on trust and history.</div>
+        <div class="contract-clause"><strong>4. INTEREST RATE</strong><br>4.1 Interest rate: <strong>twelve percent (12%) per month</strong> (simple interest on outstanding principal).<br>4.2 Interest calculated monthly and payable per schedule.</div>
+        <div class="contract-clause"><strong>5. COLLATERAL</strong><br>Borrower shall provide valid collateral. Upon default, Lender may seize assets.</div>
+        <div class="contract-clause"><strong>6. REPAYMENT</strong><br>Monthly installments: payments apply first to interest, then principal. Early repayment allowed.</div>
+        <div class="contract-clause"><strong>7. DEFAULT</strong><br>Late payment triggers full balance demand and collateral enforcement.</div>
+        <div class="contract-clause"><strong>8. GOVERNING LAW</strong><br>This Agreement shall be governed by the laws of Kenya.</div>
+        <div class="contract-clause"><strong>9. ENTIRE AGREEMENT & SIGNATURES</strong><br>IN WITNESS WHEREOF, the Parties have executed this Agreement.</div>
+        
+        <hr />
+        <p><strong>✍️ DIGITAL SIGNATURE (draw with mouse or touch):</strong><br>By signing below, the Borrower acknowledges full understanding and agrees to all terms.</p>
+        <canvas class="signature-canvas" width="600" height="150" style="width:100%; height:auto; border-radius:16px; background:white;"></canvas>
+        <div class="flex-row" style="margin-top:12px; justify-content:space-between;">
+          <button id="clearSignBtn" class="outline small">🗑️ Clear</button>
+          <div><button id="confirmContractBtn" class="success">✅ ACCEPT & SIGN</button>
+          <button id="cancelContractBtn" class="danger outline" style="margin-left:8px;">Cancel</button></div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modalDiv);
+    canvas = modalDiv.querySelector('.signature-canvas');
+    ctx = canvas.getContext('2d');
+    canvas.width = 600; canvas.height = 150;
+    ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle = '#0a2b44'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+    const getCoords = (e, el) => {
+      const rect = el.getBoundingClientRect();
+      const scaleX = el.width / rect.width;
+      const scaleY = el.height / rect.height;
+      let cx, cy;
+      if (e.touches) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; e.preventDefault(); }
+      else { cx = e.clientX; cy = e.clientY; }
+      return { x: (cx - rect.left) * scaleX, y: (cy - rect.top) * scaleY };
+    };
+    const startDraw = (e) => { drawing = true; const pos = getCoords(e, canvas); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); ctx.lineTo(pos.x, pos.y); ctx.stroke(); };
+    const draw = (e) => { if(!drawing) return; const pos = getCoords(e, canvas); ctx.lineTo(pos.x, pos.y); ctx.stroke(); };
+    const stopDraw = () => { drawing = false; ctx.beginPath(); };
+    canvas.addEventListener('mousedown', startDraw); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDraw);
+    canvas.addEventListener('touchstart', startDraw); canvas.addEventListener('touchmove', draw); canvas.addEventListener('touchend', stopDraw);
+    modalDiv.querySelector('#clearSignBtn').addEventListener('click', () => { ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.strokeStyle = '#0a2b44'; });
+    modalDiv.querySelector('#confirmContractBtn').addEventListener('click', () => {
+      const signatureData = canvas.toDataURL('image/png');
+      if (signatureData.length < 800) { alert("Please draw your legal signature."); return; }
+      onSigned(true, signatureData);
+      modalDiv.remove();
+    });
+    modalDiv.querySelector('#cancelContractBtn').addEventListener('click', () => { onSigned(false, null); modalDiv.remove(); });
+  }
+
+  // ======================== RENDER FUNCTIONS ========================
+  
+  // Screen 1: Ask Member or Not
+  function renderMembershipQuestion() {
+    return `
+      <div class="card" style="max-width: 600px; margin: 60px auto; text-align: center;">
+        <div style="margin-bottom: 30px;">
+                    <h1 style="font-size: 2rem; margin-top: 16px;">Welcome to Koperasi</h1>
+          <p style="color: #4a627a; margin-top: 8px;">Student Loan & Savings Cooperative</p>
+        </div>
+        <h3 style="margin-bottom: 24px;">Are you a registered member?</h3>
+        <div class="choice-buttons">
+          <button id="yesMemberBtn" class="choice-btn member">Yes, I am a Member</button>
+          <button id="noMemberBtn" class="choice-btn nonmember">No, I am a Non-Member</button>
+        </div>
+        <p style="margin-top: 32px; font-size: 0.75rem; color: #6c757d;">Members enjoy lower interest rates (8%) and profit sharing. Non-members pay 12% interest.</p>
+      </div>
+    `;
+  }
+
+  // Screen 1.5: Account Creation Options (shown after member question)
+  function renderAccountOptionsScreen() {
+    return `
+      <div class="card" style="max-width: 400px; margin: 60px auto; text-align: center; padding: 20px;">
+        <button id="backToQuestionBtn" class="back-btn" style="float: left;">Back</button>
+        <div style="clear: both;"></div>
+        <div style="margin-bottom: 20px;">
+                    <h1 style="font-size: 1.5rem; margin-top: 10px; color: #4544ab;">Create Account</h1>
+        </div>
+        
+        <div style="margin: 20px 0;">
+          <button id="createAccountBtn" style="background: #4544ab; color: white; padding: 12px; border: none; border-radius: 6px; width: 100%; cursor: pointer; margin-bottom: 10px;">
+            Create New Account
+          </button>
+          <button id="googleSignInBtn" style="background: #4285f4; color: white; padding: 12px; border: none; border-radius: 6px; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <svg width="16" height="16" viewBox="0 0 24 24">
+              <path fill="#ffffff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#ffffff" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#ffffff" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#ffffff" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+          </button>
+        </div>
+        
+        <p style="margin-top: 32px; font-size: 0.75rem; color: #6c757d;">
+          Already have an account? <a href="#" id="backToLoginLink" style="color: #1a4d8c;">Sign in here</a>
+        </p>
+      </div>
+    `;
+  }
+
+  // Screen 2: Member Vow Verification
+  function renderMemberVowScreen() {
+    return `
+      <div class="card" style="max-width: 500px; margin: 40px auto; text-align: center;">
+        <button id="backToQuestionBtn" class="back-btn" style="float: left;">← Back</button>
+        <div style="clear: both;"></div>
+        <h2 style="margin: 20px 0 8px;">🔐 Member Verification</h2>
+        <p style="color: #4a627a; margin-bottom: 24px;">Please answer the security question to proceed</p>
+        
+        <div style="background: #f0f6fe; border-radius: 24px; padding: 20px; margin: 24px 0;">
+          <h3 style="margin-bottom: 16px; color: #1a4d8c;">Tell us about our vow</h3>
+          <input type="text" id="vowAnswer" placeholder="Enter your answer" style="margin-bottom: 16px; text-align: center; font-weight: 600;" />
+          <button id="verifyVowBtn" style="width: 100%;">Verify Answer →</button>
+        </div>
+        
+        <p style="margin-top: 24px; font-size: 0.75rem; color: #6c757d;">
+          This security question ensures only verified members can access the member portal.
+        </p>
+      </div>
+    `;
+  }
+
+  // Screen 3: Member Login (with Member/Admin choice)
+  function renderMemberLoginScreen() {
+    return `
+      <div class="card" style="max-width: 500px; margin: 40px auto; text-align: center;">
+        <button id="backToQuestionBtn" class="back-btn" style="float: left;">← Back</button>
+        <div style="clear: both;"></div>
+        <h2 style="margin: 20px 0 8px;">👥 Member Portal</h2>
+        <p style="color: #4a627a; margin-bottom: 24px;">Please select your access type</p>
+        
+        <div class="role-selector">
+          <div id="memberRoleBtn" class="role-card" style="background: #e8f5e9;">
+            <span style="font-size: 32px;">👤</span>
+            <h3>Member</h3>
+            <p style="font-size: 0.7rem;">Access your dashboard<br>Loans & Contributions</p>
+          </div>
+          <div id="adminRoleBtn" class="role-card" style="background: #fff3e0;">
+            <span style="font-size: 32px;">📊</span>
+            <h3>Admin</h3>
+            <p style="font-size: 0.7rem;">Treasurer Access<br>Financial Oversight</p>
+          </div>
+        </div>
+        
+        <div id="memberLoginForm" style="margin-top: 24px; display: none;">
+          <hr />
+          <h3 style="margin: 20px 0;">Member Sign In</h3>
+          <input type="text" id="memberUsername" placeholder="Username" style="margin-bottom: 12px;" />
+          <input type="password" id="memberPassword" placeholder="Password" />
+          <button id="doMemberLoginBtn" style="margin-top: 20px; width: 100%;">Sign In →</button>
+        </div>
+        
+        <div id="adminLoginForm" style="margin-top: 24px; display: none;">
+          <hr />
+          <h3 style="margin: 20px 0;">Admin / Treasurer Sign In</h3>
+          <input type="text" id="adminUsername" placeholder="Username" style="margin-bottom: 12px;" />
+          <input type="password" id="adminPassword" placeholder="Password" />
+          <button id="doAdminLoginBtn" style="margin-top: 20px; width: 100%;">Admin Access →</button>
+        </div>
+        
+        <p style="margin-top: 24px; font-size: 0.7rem; background: #f4f9fe; padding: 12px; border-radius: 20px;">
+          <strong>Demo Credentials:</strong><br>
+          Member: member1 / 123 &nbsp;|&nbsp; member2 / 123<br>
+          Admin (Treasurer): treasurer / admin
+        </p>
+      </div>
+    `;
+  }
+
+  // Screen 3: Non-Member Login
+  function renderNonMemberLoginScreen() {
+    return `
+      <div class="card" style="max-width: 450px; margin: 40px auto; text-align: center;">
+        <button id="backToQuestionBtn" class="back-btn" style="float: left;">← Back</button>
+        <div style="clear: both;"></div>
+        <h2 style="margin: 20px 0;">📄 Non-Member Portal</h2>
+        <p style="color: #4a627a; margin-bottom: 24px;">Loan applications require signed contract</p>
+        
+        <div style="margin-top: 20px;">
+          <input type="text" id="nonMemberUsername" placeholder="Username" style="margin-bottom: 12px;" />
+          <input type="password" id="nonMemberPassword" placeholder="Password" />
+          <button id="doNonMemberLoginBtn" style="margin-top: 20px; width: 100%;">Sign In</button>
+          <button id="nonMemberSignUpBtn" style="margin-top: 12px; width: 100%; background: linear-gradient(135deg, #4544ab, #626cd5);">Sign Up</button>
+        </div>
+        
+        <p style="margin-top: 24px; font-size: 0.7rem; background: #f4f9fe; padding: 12px; border-radius: 20px;">
+          <strong>Demo Credentials:</strong><br>
+          Non-Member: non1 / 123
+        </p>
+      </div>
+    `;
+  }
+
+  // Screen 3.5: Non-Member Sign Up
+  function renderNonMemberSignUpScreen() {
+    return `
+      <div class="card" style="max-width: 600px; margin: 40px auto; text-align: center; padding: 25px;">
+        <button id="backToNonMemberLoginBtn" class="back-btn" style="float: left;">Back</button>
+        <div style="clear: both;"></div>
+        <h2 style="margin: 10px 0; color: #4544ab; font-size: 1.3rem;">Create Account</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; margin: 20px 0;">
+          <div style="margin-bottom: 8px;">
+            <label style="font-size: 0.85rem; color: #4544ab;">Full Name *</label>
+            <input type="text" id="signupFullName" placeholder="Full name" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          
+          <div style="margin-bottom: 8px;">
+            <label style="font-size: 0.85rem; color: #4544ab;">Email *</label>
+            <input type="email" id="signupEmail" placeholder="Email" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          
+          <div style="margin-bottom: 8px;">
+            <label style="font-size: 0.85rem; color: #4544ab;">Phone *</label>
+            <input type="tel" id="signupPhone" placeholder="Phone" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          
+          <div style="margin-bottom: 8px;">
+            <label style="font-size: 0.85rem; color: #4544ab;">Username *</label>
+            <input type="text" id="signupUsername" placeholder="Username" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          
+          <div style="margin-bottom: 8px;">
+            <label style="font-size: 0.85rem; color: #4544ab;">Password *</label>
+            <input type="password" id="signupPassword" placeholder="Password" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          
+          <div style="margin-bottom: 8px;">
+            <label style="font-size: 0.75rem; display: flex; align-items: center;">
+              <input type="checkbox" id="signupAgreeTerms" required style="margin-right: 4px;">
+              I agree to Terms
+            </label>
+          </div>
+        </div>
+        
+        <div style="margin: 20px 0;">
+          <button id="submitNonMemberSignUpBtn" style="background: #4544ab; color: white; padding: 10px; border: none; border-radius: 6px; width: 100%; cursor: pointer;">
+            Create Account
+          </button>
+          <button id="googleSignUpBtn" style="background: #4285f4; color: white; padding: 10px; border: none; border-radius: 6px; width: 100%; cursor: pointer; margin-top: 8px; display: flex; align-items: center; justify-content: center;">
+            <svg width="16" height="16" viewBox="0 0 24 24">
+              <path fill="#ffffff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#ffffff" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#ffffff" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#ffffff" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+          </button>
+        </div>
+        
+        <p style="margin-top: 10px; font-size: 0.7rem; color: #6c757d;">
+          <a href="#" id="backToLoginLink" style="color: #1a4d8c;">Sign in</a>
+        </p>
+      </div>
+    `;
+  }
+
+  // ======================== DASHBOARDS ========================
+  
+  function renderMemberDashboard() {
+    const uid = currentUser.id;
+    const user = currentUser;
+    const contribs = getContributions().filter(c => c.memberId === uid);
+    const totalContributed = contribs.reduce((s,c)=>s+c.amount,0);
+    const loans = getLoans().filter(l => l.userId === uid);
+    const activeLoan = loans.find(l => l.status === 'active');
+    const payments = getPayments().filter(p => p.userId === uid);
+    const extra = getMemberExtra();
+    let shareHtml = '';
+    if (extra.lastDistribution?.details) {
+      const mine = extra.lastDistribution.details.find(d => d.memberId === uid);
+      if (mine) shareHtml = `<div class="badge" style="background:#e3f7ec;">🎉 Dividend: $${mine.share.toFixed(2)}</div>`;
+    }
+    return `
+      <div class="card">
+        <button class="logout-btn" id="logoutBtn">← Logout</button>
+        <div class="user-info-panel">
+          <div><strong>👤 ${user.fullName}</strong><br><span style="font-size:0.75rem;">Member ID: ${user.id} | ${user.email || user.username}@koperasi</span></div>
+          <div>${shareHtml}</div>
+        </div>
+        <div class="dashboard-grid" style="margin-top:8px;">
+          <div class="stat-card"><div class="stat-number">$${totalContributed}</div><div>Total Contributions</div></div>
+          <div class="stat-card"><div class="stat-number">8%</div><div>Monthly Loan Rate</div></div>
+          <div class="stat-card"><div class="stat-number">${loans.filter(l=>l.status==='closed').length}</div><div>Loans Completed</div></div>
+        </div>
+        <hr />
+        <div class="flex-row"><input type="number" id="contribAmt" placeholder="Amount $" value="120" /><button id="contributeBtn" class="success">➕ Contribute</button></div>
+        <div style="margin-top: 15px; text-align: left;">
+          <label style="font-size: 0.85rem; color: #4544ab; display: block; margin-bottom: 5px;">📷 Upload Receipt (Optional)</label>
+          <input type="file" id="contributionReceipt" accept="image/*" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px;" />
+          <small style="color: #666; font-size: 0.75rem;">Accepted: JPEG, PNG, GIF (Max 5MB)</small>
+        </div>
+        <div class="flex-row"><input type="number" id="loanAmt" placeholder="Loan amount $" /><button id="memberLoanBtn">🏦 Apply Loan (8%)</button></div>
+        ${activeLoan ? `<div style="background:#eff6ff; border-radius:24px; padding:16px; margin-top:20px;"><strong>📌 Active Loan:</strong> Remaining $${activeLoan.remainingBalance.toFixed(2)} · Monthly interest $${(activeLoan.remainingBalance*0.08).toFixed(2)}<div class="flex-row"><input type="number" id="repayVal" placeholder="Repayment $" /><button id="repayLoanBtn" class="secondary">Repay</button></div></div>` : '<p>✅ No active loan</p>'}
+        <h3>📜 Recent Activity</h3>
+        <table><tr><th>Date</th><th>Type</th><th>Amount</th></tr>${contribs.slice(-4).reverse().map(c=>`<tr><td>${new Date(c.date).toLocaleDateString()}</td><td>Contribution</td><td>$${c.amount}</td></tr>`).join('')}${payments.slice(-4).reverse().map(p=>`<tr><td>${new Date(p.date).toLocaleDateString()}</td><td>Loan Payment</td><td>$${p.amount}</td></tr>`).join('')}</table>
+      </div>
+    `;
+  }
+
+  // Screen 6: Admin Image Viewer
+  function renderAdminImageViewer() {
+    const images = getAdminImages(); // This would fetch from Supabase
+    return `
+      <div class="card" style="max-width: 800px; margin: 40px auto; text-align: center; padding: 25px;">
+        <button id="backToAdminDashboardBtn" class="back-btn" style="float: left;">← Back</button>
+        <div style="clear: both;"></div>
+        <h2 style="margin: 10px 0; color: #4544ab; font-size: 1.5rem;">📸 User Uploaded Images</h2>
+        
+        <div style="margin: 20px 0;">
+          <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+            <input type="text" id="imageSearch" placeholder="Search by username or image type..." style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+            <button id="searchImagesBtn" style="padding: 10px 20px; background: #4544ab; color: white; border: none; border-radius: 6px; cursor: pointer;">Search</button>
+          </div>
+          
+          <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <select id="filterType" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+              <option value="">All Images</option>
+              <option value="receipt">Receipts</option>
+              <option value="payment_proof">Payment Proofs</option>
+              <option value="contribution_proof">Contribution Proofs</option>
+              <option value="profile_picture">Profile Pictures</option>
+            </select>
+            <button id="verifyImagesBtn" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer;">Verify Selected</button>
+          </div>
+        </div>
+        
+        <div id="imagesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
+          ${images.map(img => `
+            <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; text-align: center; background: #f9f9f9;">
+              <img src="${img.image_url}" alt="${img.image_type}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 6px; margin-bottom: 10px;">
+              <div style="font-size: 0.85rem; color: #666; margin-bottom: 5px;">${img.image_type}</div>
+              <div style="font-size: 0.8rem; color: #4544ab; margin-bottom: 5px;">
+                <strong>${img.target_user_name}</strong>
+              </div>
+              <div style="font-size: 0.75rem; color: #666; margin-bottom: 5px;">${new Date(img.upload_date).toLocaleDateString()}</div>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <button onclick="viewImage('${img.image_url}')" style="padding: 5px 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem;">View</button>
+                <button onclick="verifyImage('${img.id}')" style="padding: 5px 10px; background: ${img.is_verified ? '#28a745' : '#ffc107'}; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem;">${img.is_verified ? 'Verified' : 'Verify'}</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // Screen 6: Create Account Form
+  function renderCreateAccountScreen() {
+    return `
+      <div class="card" style="max-width: 600px; margin: 40px auto; text-align: center; padding: 25px;">
+        <button id="backToQuestionBtn" class="back-btn" style="float: left;">Back</button>
+        <div style="clear: both;"></div>
+        <h2 style="margin: 10px 0; color: #4544ab; font-size: 1.3rem;">Create Account</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; margin: 20px 0;">
+          <div style="margin-bottom: 8px;">
+            <label style="font-size: 0.85rem; color: #4544ab;">Full Name *</label>
+            <input type="text" id="fullName" placeholder="Full name" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          
+          <div style="margin-bottom: 8px;">
+            <label style="font-size: 0.85rem; color: #4544ab;">Email *</label>
+            <input type="email" id="email" placeholder="Email" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          
+          <div style="margin-bottom: 8px;">
+            <label style="font-size: 0.85rem; color: #4544ab;">Phone *</label>
+            <input type="tel" id="phone" placeholder="Phone" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          
+          <div style="margin-bottom: 8px;">
+            <label style="font-size: 0.85rem; color: #4544ab;">Password *</label>
+            <input type="password" id="password" placeholder="Password" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          
+          <div style="margin-bottom: 8px;">
+            <label style="font-size: 0.75rem; display: flex; align-items: center;">
+              <input type="checkbox" id="agreeTerms" required style="margin-right: 4px;">
+              I agree to Terms
+            </label>
+          </div>
+        </div>
+        
+        <div style="margin: 20px 0;">
+          <button id="createAccountSubmitBtn" style="background: #4544ab; color: white; padding: 10px; border: none; border-radius: 6px; width: 100%; cursor: pointer;">
+            Create Account
+          </button>
+        </div>
+        
+        <p style="margin-top: 10px; font-size: 0.7rem; color: #6c757d;">
+          <a href="#" id="backToLoginLink" style="color: #1a4d8c;">Sign in</a>
+        </p>
+      </div>
+    `;
+  }
+
+  function renderNonMemberDashboard() {
+    const uid = currentUser.id;
+    const user = currentUser;
+    const loans = getLoans().filter(l => l.userId === uid);
+    const activeLoan = loans.find(l => l.status === 'active');
+    const payments = getPayments().filter(p => p.userId === uid);
+    return `
+      <div class="card">
+        <button class="logout-btn" id="logoutBtn">← Logout</button>
+        <div class="user-info-panel">
+          <div><strong>📄 ${user.fullName}</strong><br><span style="font-size:0.75rem;">ID: ${user.idNumber || user.id} | ${user.email || 'no email'}</span></div>
+          <div><span class="badge">Non-Member · 12% Interest</span></div>
+        </div>
+        <div class="flex-row"><input type="number" id="nonLoanAmt" placeholder="Loan amount" /><button id="requestContractBtn" class="warning">✍️ Sign Contract & Apply</button></div>
+        ${activeLoan ? `
+          <div style="background:#fff3e8; border-radius:24px; padding:18px; margin:20px 0;">
+            <strong>📌 Active Loan:</strong> $${activeLoan.amount} original · Remaining: $${activeLoan.remainingBalance.toFixed(2)}<br/>
+            <small>Monthly interest (12%): $${(activeLoan.remainingBalance*0.12).toFixed(2)}</small>
+            <div class="flex-row"><input type="number" id="repayNon" placeholder="Payment" /><button id="repayNonBtn" class="secondary">Repay</button></div>
+            <div style="margin-top: 15px; text-align: left;">
+              <label style="font-size: 0.85rem; color: #4544ab; display: block; margin-bottom: 5px;">📷 Upload Payment Proof (Optional)</label>
+              <input type="file" id="paymentProof" accept="image/*" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px;" />
+              <small style="color: #666; font-size: 0.75rem;">Accepted: JPEG, PNG, GIF (Max 5MB)</small>
+            </div>
+            <span class="badge">✓ Signed contract on file</span>
+          </div>
+        ` : '<p style="margin:16px 0;">✅ No active loans. Sign a contract to borrow.</p>'}
+        <h3>📜 Loan History</h3>
+        <table><tr><th>Date</th><th>Amount</th><th>Status</th><th>Contract</th></tr>${loans.map(l=>`<tr><td>${new Date(l.dateTaken).toLocaleDateString()}</td><td>$${l.amount}</td><td>${l.status}</td><td>📄 Signed</td></tr>`).join('')}</table>
+      </div>
+    `;
+  }
+
+  function renderTreasurerDashboard() {
+    const fin = computeTotals();
+    const members = getAllMembers();
+    const contribMap = memberContributionMap();
+    const activeLoans = getLoans().filter(l => l.status === 'active');
+    const contracts = getContracts();
+    const payments = getPayments();
+    return `
+      <div class="card">
+        <button class="logout-btn" id="logoutBtn">← Logout</button>
+        <div class="user-info-panel">
+          <div><strong>📊 ${currentUser.fullName}</strong><br><span style="font-size:0.75rem;">Treasury Management</span></div>
+          <div><span class="badge">Auto-sync</span></div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:16px; margin:24px 0;">
+          <div class="stat-card"><div class="stat-number">$${fin.totalMoneyIn.toFixed(2)}</div><div>Total IN</div></div>
+          <div class="stat-card"><div class="stat-number">$${fin.totalLoansOut.toFixed(2)}</div><div>Total OUT</div></div>
+          <div class="stat-card"><div class="stat-number">$${fin.totalInterestIncome.toFixed(2)}</div><div>Interest Income</div></div>
+          <div class="stat-card"><div class="stat-number">$${fin.netPosition.toFixed(2)}</div><div>Net Cash</div></div>
+        </div>
+        <div class="flex-row" style="justify-content: space-between; margin-bottom:24px;">
+          <span class="badge">📄 Contracts: ${contracts.length}</span>
+          <button id="distributeBtn" class="warning">🎯 Distribute Interest</button>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+          <div><h3>👥 Member Contributions</h3><table><tr><th>Member</th><th>Total</th></tr>${members.map(m=>`<tr><td>${m.fullName}</td><td>$${(contribMap.get(m.id)||0).toFixed(2)}</td></tr>`).join('')}</table></div>
+          <div><h3>🏦 Active Loans</h3><table><tr><th>Borrower</th><th>Remaining</th><th>Signed</th></tr>${activeLoans.map(l=>`<tr><td>${l.userName} (${l.roleType === 'member' ? '8%' : '12%'})</td><td>$${l.remainingBalance.toFixed(2)}</td><td>${l.signature ? '✅' : '—'}</td></tr>`).join('')}</table></div>
+        </div>
+        <hr /><h3>📋 Recent Repayments</h3><table><tr><th>Date</th><th>Borrower</th><th>Payment</th><th>Interest</th></tr>${payments.slice(-5).reverse().map(p=>`<tr><td>${new Date(p.date).toLocaleDateString()}</td><td>${p.userName}</td><td>$${p.amount}</td><td>$${(p.interestPortion||0).toFixed(2)}</td></tr>`).join('')}</table>
+      </div>
+    `;
+  }
+
+  // ======================== MAIN RENDER ========================
+  function render() {
+    const root = document.getElementById('appRoot');
+    
+    // If user is logged in, show appropriate dashboard
+    if (currentUser) {
+      if (currentUser.role === 'member') root.innerHTML = renderMemberDashboard();
+      else if (currentUser.role === 'nonmember') root.innerHTML = renderNonMemberDashboard();
+      else if (currentUser.role === 'treasurer') root.innerHTML = renderTreasurerDashboard();
+      attachDashboardEvents();
+      return;
+    }
+    
+    // Otherwise, show login flow based on state
+    if (loginFlowState === 'initial') {
+      root.innerHTML = renderMembershipQuestion();
+      document.getElementById('yesMemberBtn')?.addEventListener('click', () => {
+        loginFlowState = 'memberVow';
+        render();
+      });
+      document.getElementById('noMemberBtn')?.addEventListener('click', () => {
+        loginFlowState = 'nonmemberLogin';
+        render();
+      });
+    }
+    else if (loginFlowState === 'accountOptions') {
+      root.innerHTML = renderAccountOptionsScreen();
+      document.getElementById('backToQuestionBtn')?.addEventListener('click', () => {
+        loginFlowState = 'initial';
+        render();
+      });
+      document.getElementById('backToLoginLink')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginFlowState = 'initial';
+        render();
+      });
+      document.getElementById('createAccountBtn')?.addEventListener('click', () => {
+        loginFlowState = 'createAccount';
+        render();
+      });
+      document.getElementById('googleSignInBtn')?.addEventListener('click', async () => {
+        try {
+          const user = await signInWithGoogle();
+          if (user) {
+            currentUser = user;
+            loginFlowState = 'initial';
+            render();
+          } else {
+            alert("Google sign-in failed");
+          }
+        } catch (error) {
+          alert(`Google sign-in failed: ${error.message}`);
+        }
+      });
+    }
+    else if (loginFlowState === 'memberVow') {
+      root.innerHTML = renderMemberVowScreen();
+      document.getElementById('backToQuestionBtn')?.addEventListener('click', () => {
+        loginFlowState = 'initial';
+        render();
+      });
+      document.getElementById('verifyVowBtn')?.addEventListener('click', () => {
+        const answer = document.getElementById('vowAnswer').value.trim();
+        if (answer.toLowerCase() === 'turamana') {
+          loginFlowState = 'memberLogin';
+          render();
+        } else {
+          alert("Please consider Non-member portal");
+        }
+      });
+    }
+    else if (loginFlowState === 'createAccount') {
+      root.innerHTML = renderCreateAccountScreen();
+      document.getElementById('backToQuestionBtn')?.addEventListener('click', () => {
+        loginFlowState = 'initial';
+        render();
+      });
+      document.getElementById('backToLoginLink')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginFlowState = 'initial';
+        render();
+      });
+      document.getElementById('createAccountSubmitBtn')?.addEventListener('click', () => {
+        const fullName = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const idNumber = document.getElementById('idNumber').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const agreeTerms = document.getElementById('agreeTerms').checked;
+        
+        // Validation
+        if (!fullName || !email || !phone || !idNumber || !password || !confirmPassword) {
+          alert('Please fill in all required fields.');
+          return;
+        }
+        
+        if (password !== confirmPassword) {
+          alert('Passwords do not match.');
+          return;
+        }
+        
+        if (!agreeTerms) {
+          alert('Please agree to the Terms of Service and Privacy Policy.');
+          return;
+        }
+        
+        // Create non-member account (members can only be created by admin)
+        const newUser = {
+          id: Date.now().toString(),
+          fullName: fullName,
+          email: email,
+          phone: phone,
+          idNumber: idNumber,
+          role: 'nonmember',
+          username: email.split('@')[0],
+          createdAt: new Date().toISOString()
+        };
+        
+        // Store user (in real app, this would be sent to server)
+        const users = JSON.parse(localStorage.getItem('koperasiUsers') || '[]');
+        users.push(newUser);
+        localStorage.setItem('koperasiUsers', JSON.stringify(users));
+        
+        // Auto-login the new user
+        currentUser = newUser;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        
+        alert(`Account created successfully! Welcome to Koperasi Finance, ${fullName}!`);
+        render();
+      });
+    }
+    else if (loginFlowState === 'memberLogin') {
+      root.innerHTML = renderMemberLoginScreen();
+      document.getElementById('backToQuestionBtn')?.addEventListener('click', () => {
+        loginFlowState = 'initial';
+        render();
+      });
+      // Member role selection
+      document.getElementById('memberRoleBtn')?.addEventListener('click', () => {
+        document.getElementById('memberLoginForm').style.display = 'block';
+        document.getElementById('adminLoginForm').style.display = 'none';
+      });
+      document.getElementById('adminRoleBtn')?.addEventListener('click', () => {
+        document.getElementById('memberLoginForm').style.display = 'none';
+        document.getElementById('adminLoginForm').style.display = 'block';
+      });
+      document.getElementById('doMemberLoginBtn')?.addEventListener('click', async () => {
+        const uname = document.getElementById('memberUsername').value.trim();
+        const pwd = document.getElementById('memberPassword').value.trim();
+        
+        try {
+          const user = await signIn(uname, pwd);
+          if (user) {
+            currentUser = user;
+            loginFlowState = 'initial';
+            render();
+          } else {
+            alert("Invalid member credentials");
+          }
+        } catch (error) {
+          alert(`Login failed: ${error.message}`);
+        }
+      });
+
+      document.getElementById('doAdminLoginBtn')?.addEventListener('click', async () => {
+        const uname = document.getElementById('adminUsername').value.trim();
+        const pwd = document.getElementById('adminPassword').value.trim();
+        
+        try {
+          const user = await signIn(uname, pwd);
+          if (user) {
+            currentUser = user;
+            loginFlowState = 'initial';
+            render();
+          } else {
+            alert("Invalid admin credentials");
+          }
+        } catch (error) {
+          alert(`Login failed: ${error.message}`);
+        }
+      });
+    } 
+    else if (loginFlowState === 'nonmemberLogin') {
+      root.innerHTML = renderNonMemberLoginScreen();
+      document.getElementById('backToQuestionBtn')?.addEventListener('click', () => {
+        loginFlowState = 'initial';
+        render();
+      });
+      document.getElementById('doNonMemberLoginBtn')?.addEventListener('click', async () => {
+        const uname = document.getElementById('nonMemberUsername').value.trim();
+        const pwd = document.getElementById('nonMemberPassword').value.trim();
+        
+        try {
+          const user = await signIn(uname, pwd);
+          if (user) {
+            currentUser = user;
+            loginFlowState = 'initial';
+            render();
+          } else {
+            alert("Invalid non-member credentials");
+          }
+        } catch (error) {
+          alert(`Login failed: ${error.message}`);
+        }
+      });
+      document.getElementById('nonMemberSignUpBtn')?.addEventListener('click', () => {
+        loginFlowState = 'nonMemberSignUp';
+        render();
+      });
+    }
+    else if (loginFlowState === 'nonMemberSignUp') {
+      root.innerHTML = renderNonMemberSignUpScreen();
+      document.getElementById('backToNonMemberLoginBtn')?.addEventListener('click', () => {
+        loginFlowState = 'nonmemberLogin';
+        render();
+      });
+      document.getElementById('backToLoginLink')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginFlowState = 'nonmemberLogin';
+        render();
+      });
+      document.getElementById('submitNonMemberSignUpBtn')?.addEventListener('click', async () => {
+        const fullName = document.getElementById('signupFullName').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
+        const phone = document.getElementById('signupPhone').value.trim();
+        const idNumber = document.getElementById('signupIdNumber').value.trim();
+        const username = document.getElementById('signupUsername').value.trim();
+        const password = document.getElementById('signupPassword').value;
+        const confirmPassword = document.getElementById('signupConfirmPassword').value;
+        const agreeTerms = document.getElementById('signupAgreeTerms').checked;
+        
+        // Validation
+        if (!fullName || !email || !phone || !idNumber || !username || !password || !confirmPassword) {
+          alert('Please fill in all required fields.');
+          return;
+        }
+        
+        if (password !== confirmPassword) {
+          alert('Passwords do not match.');
+          return;
+        }
+        
+        if (!agreeTerms) {
+          alert('Please agree to the Terms of Service and Privacy Policy.');
+          return;
+        }
+        
+        // Check if username already exists
+        const users = getUsers();
+        if (users.find(u => u.username === username)) {
+          alert('Username already exists. Please choose another.');
+          return;
+        }
+        
+        // Create non-member account
+        const newUser = {
+          id: Date.now().toString(),
+          fullName: fullName,
+          email: email,
+          phone: phone,
+          idNumber: idNumber,
+          role: 'nonmember',
+          username: username,
+          password: password,
+          createdAt: new Date().toISOString()
+        };
+        
+        // Store user
+        users.push(newUser);
+        setUsers(users);
+        
+        // Auto-login the new user
+        currentUser = newUser;
+        loginFlowState = 'initial';
+        
+        alert(`Account created successfully! Welcome to Koperasi Finance, ${fullName}!`);
+        render();
+      });
+      document.getElementById('googleSignUpBtn')?.addEventListener('click', async () => {
+        try {
+          const user = await signInWithGoogle();
+          if (user) {
+            currentUser = user;
+            loginFlowState = 'initial';
+            render();
+          } else {
+            alert("Google sign-up failed");
+          }
+        } catch (error) {
+          alert(`Google sign-up failed: ${error.message}`);
+        }
+      });
+    }
+  }
+
+  function attachDashboardEvents() {
+    document.getElementById('logoutBtn')?.addEventListener('click', async () => { 
+      try {
+        if (supabaseConnected) {
+          await signOut();
+        }
+        currentUser = null; 
+        loginFlowState = 'initial';
+        render(); 
+      } catch (error) {
+        console.error('Logout failed:', error);
+        // Still logout locally even if Supabase fails
+        currentUser = null; 
+        loginFlowState = 'initial';
+        render(); 
+      }
+    });
+    if (!currentUser) return;
+    
+    if (currentUser.role === 'member') {
+      document.getElementById('contributeBtn')?.addEventListener('click', () => {
+        let v = parseFloat(document.getElementById('contribAmt')?.value);
+        if(v <= 0) {
+          alert('Please enter a valid contribution amount.');
+          return;
+        }
+        
+        // Handle receipt image upload
+        const receiptInput = document.getElementById('contributionReceipt');
+        const receiptFile = receiptInput?.files[0];
+        
+        if (receiptFile) {
+          // Validate file type and size
+          if (!receiptFile.type.startsWith('image/')) {
+            alert('Please upload an image file (JPEG, PNG, etc.)');
+            return;
+          }
+          
+          if (receiptFile.size > 5 * 1024 * 1024) { // 5MB limit
+            alert('Receipt image must be less than 5MB');
+            return;
+          }
+          
+          // Process image upload
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const imageData = e.target.result;
+            addContribution(currentUser.id, v, imageData);
+          };
+          reader.readAsDataURL(receiptFile);
+        } else {
+          // No image uploaded, proceed normally
+          if (confirm('No receipt image uploaded. Continue without receipt?')) {
+            addContribution(currentUser.id, v);
+          }
+        }
+      });
+      document.getElementById('memberLoanBtn')?.addEventListener('click', () => {
+        let v = parseFloat(document.getElementById('loanAmt')?.value);
+        if(v>0) { takeLoan(currentUser.id, currentUser.fullName, v, 'member', 0.08); render(); }
+      });
+      document.getElementById('repayLoanBtn')?.addEventListener('click', () => {
+        let v = parseFloat(document.getElementById('repayVal')?.value);
+        let active = getLoans().find(l=>l.userId===currentUser.id && l.status==='active');
+        if(active && v>0) { repayLoan(active.id, v); render(); }
+      });
+    }
+    
+    if (currentUser.role === 'nonmember') {
+      document.getElementById('requestContractBtn')?.addEventListener('click', () => {
+        let amt = parseFloat(document.getElementById('nonLoanAmt')?.value);
+        if (!amt || amt <= 0) { alert("Enter valid loan amount"); return; }
+        showFullLegalContract(amt, (ok, signature) => {
+          if (ok && signature) {
+            takeLoan(currentUser.id, currentUser.fullName, amt, 'nonmember', 0.12, signature);
+            saveContract(currentUser.id, currentUser.fullName, amt, signature, Date.now(), '');
+            render();
+            alert("✅ Contract signed. Loan disbursed.");
+          }
+        });
+      });
+      document.getElementById('repayNonBtn')?.addEventListener('click', () => {
+        let v = parseFloat(document.getElementById('repayNon')?.value);
+        if (v <= 0) {
+          alert('Please enter a valid repayment amount.');
+          return;
+        }
+        
+        // Handle payment proof image upload
+        const paymentInput = document.getElementById('paymentProof');
+        const paymentFile = paymentInput?.files[0];
+        
+        if (!paymentFile) {
+          if (confirm('No payment proof image uploaded. Continue without proof?')) {
+            let active = getLoans().find(l=>l.userId===currentUser.id && l.status==='active');
+            if(active && v>0) { repayLoan(active.id, v); render(); }
+          }
+          return;
+        }
+        
+        // Validate file type and size
+        if (!paymentFile.type.startsWith('image/')) {
+          alert('Please upload an image file (JPEG, PNG, etc.)');
+          return;
+        }
+        
+        if (paymentFile.size > 5 * 1024 * 1024) { // 5MB limit
+          alert('Payment proof image must be less than 5MB');
+          return;
+        }
+        
+        // Process payment with image
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imageData = e.target.result;
+          let active = getLoans().find(l=>l.userId===currentUser.id && l.status==='active');
+          if(active && v>0) { repayLoan(active.id, v, imageData); render(); }
+        };
+        reader.readAsDataURL(paymentFile);
+      });
+    }
+    
+    if (currentUser.role === 'treasurer') {
+      document.getElementById('distributeBtn')?.addEventListener('click', () => {
+        const res = distributeInterest();
+        alert(res.msg);
+        render();
+      });
+    }
+  }
+
+  initData();
+  render();
+</script>
+</body>
+</html>

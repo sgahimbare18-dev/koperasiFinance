@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="Koperasi Finance provides trusted loan solutions with transparent terms for members and non-members. Fast processing, fair rates, and community-focused lending.">
+    <title>Koperasi | Trusted Loan Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9eef3 100%);
+            color: #1a2c3e;
+            line-height: 1.5;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header / Navigation */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(0px);
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #4544ab;
+            letter-spacing: -0.5px;
+            transition: transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #626cd5;
+            box-shadow: 0 4px 12px rgba(97, 101, 199, 0.1);
+        }
+        .logo span {
+            color: #4544ab;
+        }
+        .logo:hover {
+            transform: scale(1.01);
+        }
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #2c4c6e;
+            font-weight: 500;
+            transition: 0.2s;
+            position: relative;
+        }
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #1a4d8c;
+            transition: width 0.2s;
+        }
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+        .nav-links a:hover {
+            color: #1a4d8c;
+        }
+        .btn-outline-nav {
+            background: transparent;
+            border: 1.5px solid #1a4d8c;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #1a4d8c;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-outline-nav:hover {
+            background: #1a4d8c;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(26,77,140,0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 70px 0 50px;
+        }
+        .hero h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0a2b44, #1a4d8c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+        }
+        .hero h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #2c4c6e;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            color: #4a627a;
+        }
+
+        /* Cards / Sections */
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 48px;
+            color: #0a2b44;
+            letter-spacing: -0.3px;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 32px;
+            margin: 48px 0;
+        }
+        .feature-card {
+            background: white;
+            padding: 32px 24px;
+            border-radius: 28px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            transition: transform 0.25s ease, box-shadow 0.2s;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+        }
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #1a4d8c;
+        }
+        .feature-card p {
+            color: #4a627a;
+            font-size: 0.95rem;
+        }
+
+        /* Loan Services double card */
+        .services-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin: 48px 0;
+        }
+        .service-card {
+            background: white;
+            border-radius: 32px;
+            padding: 32px 28px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.06);
+            transition: all 0.2s;
+        }
+        .service-card.nonmember {
+            border-top: 6px solid #b86b1f;
+        }
+        .service-card.member {
+            border-top: 6px solid #1f7b4d;
+        }
+        .service-card h3 {
+            font-size: 1.7rem;
+            margin-bottom: 20px;
+        }
+        .service-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        .service-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eef2f8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .service-card li::before {
+            content: "✓";
+            color: #1f7b4d;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .nonmember li::before {
+            color: #b86b1f;
+        }
+        .highlight {
+            background: #fff8e7;
+            padding: 16px;
+            border-radius: 20px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            border-left: 4px solid #b86b1f;
+        }
+        .interest-badge {
+            display: inline-block;
+            background: #eef2ff;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        /* How it works */
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px;
+            margin: 48px 0;
+        }
+        .step {
+            background: white;
+            border-radius: 60px;
+            padding: 16px 28px;
+            min-width: 180px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .step:hover {
+            transform: translateY(-2px);
+        }
+        .step-number {
+            background: #1a4d8c;
+            color: white;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 60px;
+        }
+
+        /* Commitment & CTA */
+        .commitment-box {
+            background: #0a2b44;
+            color: white;
+            border-radius: 36px;
+            padding: 48px 40px;
+            text-align: center;
+            margin: 56px 0;
+            box-shadow: 0 20px 35px -10px rgba(10,43,68,0.3);
+        }
+        .commitment-box h3 {
+            font-size: 1.8rem;
+            margin-bottom: 24px;
+        }
+        .commitment-box ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+        .commitment-box li {
+            font-size: 1rem;
+        }
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 32px 0;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: #1a4d8c;
+            color: white;
+            border: none;
+            padding: 14px 36px;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #1a4d8c;
+            color: #1a4d8c;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-primary:hover, .btn-secondary:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.02);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+        }
+        .btn-primary:active, .btn-secondary:active {
+            transform: translateY(1px);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: white;
+            border-radius: 32px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+        .contact-details {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+            margin: 24px 0;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #2c4c6e;
+            font-weight: 500;
+        }
+
+        /* ========== BLACK FOOTER (REDESIGNED DARK THEME) ========== */
+        .dark-footer {
+            background: #0a0c10;
+            color: #e0e4e9;
+            padding: 48px 0 32px;
+            margin-top: 40px;
+            border-top: none;
+            font-size: 0.9rem;
+        }
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 40px;
+            margin-bottom: 48px;
+        }
+        .footer-brand h3 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #4544ab;
+            margin-bottom: 12px;
+        }
+        .footer-brand span {
+            color: #4544ab;
+        }
+        .footer-brand p {
+            color: #b0b7c4;
+            line-height: 1.5;
+            margin-top: 8px;
+        }
+        .footer-links-col h4, .footer-contact-col h4 {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+        .footer-links-col ul, .footer-contact-col ul {
+            list-style: none;
+            padding: 0;
+        }
+        .footer-links-col li, .footer-contact-col li {
+            margin-bottom: 12px;
+        }
+        .footer-links-col a {
+            text-decoration: none;
+            color: #cbd2df;
+            transition: color 0.2s, transform 0.1s;
+            display: inline-block;
+        }
+        .footer-links-col a:hover {
+            color: #ffffff;
+            transform: translateX(3px);
+        }
+        .footer-contact-col li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #cbd2df;
+        }
+        .social-icons-dark {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+        }
+        .social-icons-dark span {
+            background: #1e2229;
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #e0e4e9;
+        }
+        .social-icons-dark span:hover {
+            background: #1a4d8c;
+            transform: translateY(-3px);
+            color: white;
+        }
+        .footer-bottom {
+            border-top: 1px solid #23272e;
+            padding-top: 28px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #8e96a3;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+        .footer-bottom .legal-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .footer-bottom .legal-links a {
+            color: #9aa3b2;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-bottom .legal-links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        .small-print {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 16px;
+            text-align: center;
+            width: 100%;
+        }
+
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero h3 { font-size: 1.2rem; }
+            .section-title { font-size: 1.6rem; }
+            .service-card { padding: 24px 20px; }
+            .nav-container { flex-direction: column; }
+            .contact-details { gap: 20px; flex-direction: column; align-items: center; }
+            .commitment-box { padding: 32px 20px; }
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<div class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="logo">
+            <img src="https://i.postimg.cc/fRm14xvT/Gemini-Generated-Image-5xmfw25xmfw25xmf.png" alt="Koperasi Finance" class="logo-img">
+            <span>KoperasiFinance</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="loans.html">Loans</a>
+            <a href="members.html">Members</a>
+            <a href="contact.html">Contact</a>
+            <button class="btn-outline-nav" id="portalBtn">Access Portal →</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Welcome to KoperasiFinance</h1>
+        <h3>Simple. Trusted. Accessible Financing.</h3>
+        <p>We provide fast, secure, and reliable loan solutions designed to meet your immediate financial needs. Whether you are a member or a valued non-member, our goal is to empower you with responsible and transparent lending services.</p>
+    </div>
+
+    <!-- Why Choose Us -->
+    <h2 class="section-title">Why Choose Us</h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Fast Loan Processing</h3>
+            <p>Get your loan approved quickly with minimal delays.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📋</div>
+            <h3>Transparent Terms</h3>
+            <p>No hidden charges. Clear interest rates and conditions.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🤝</div>
+            <h3>Flexible Access</h3>
+            <p>Both members and non-members are eligible for our loan services.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">⭐</div>
+            <h3>Trusted Relationship-Based Lending</h3>
+            <p>We value trust. Our long-term clients benefit from flexible considerations.</p>
+        </div>
+    </div>
+
+    <!-- Our Loan Services (two columns) -->
+    <h2 class="section-title">Our Loan Services</h2>
+    <div class="services-row">
+        <!-- Non-Member Card -->
+        <div class="service-card nonmember">
+            <span class="interest-badge">📄 Non-Member Plan</span>
+            <h3>For Non-Members</h3>
+            <ul>
+                <li>Loan range: <strong>KES 10,000 – 200,000</strong></li>
+                <li>Interest rate: <strong>12%</strong> flat monthly</li>
+                <li>Collateral required (flexible assets)</li>
+                <li>Simple application process</li>
+            </ul>
+            <div class="highlight">
+                <strong>✨ Special Consideration:</strong><br>
+                If you are a regular and known customer, higher loan amounts may be approved based on your relationship and history with us.
+            </div>
+        </div>
+        <!-- Member Card -->
+        <div class="service-card member">
+            <span class="interest-badge">👥 Member Plan</span>
+            <h3>For Members</h3>
+            <ul>
+                <li>Higher loan limits up to KES 500k+</li>
+                <li>Preferential terms (8% interest)</li>
+                <li>Faster approvals & lower fees</li>
+                <li>Reduced requirements + profit sharing</li>
+            </ul>
+            <div class="highlight" style="background:#e8f5e9; border-left-color:#1f7b4d;">
+                <strong>🎯 Member benefit:</strong> Lower interest rate and share in total interest pool every 11 months.
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <h2 class="section-title">How It Works</h2>
+    <div class="steps">
+        <div class="step"><span class="step-number">1</span> Apply online</div>
+        <div class="step"><span class="step-number">2</span> Document Review</div>
+        <div class="step"><span class="step-number">3</span> Approval</div>
+        <div class="step"><span class="step-number">4</span> Disbursement</div>
+    </div>
+    <p style="text-align: center; color: #4a627a; margin-top: -20px;">Submit your request → We review collateral & info → Receive terms → Funds issued within 24h</p>
+
+    <!-- Our Commitment -->
+    <div class="commitment-box">
+        <h3>Our Commitment</h3>
+        <ul>
+            <li>✔ Responsible lending practices</li>
+            <li>✔ Protecting your financial well-being</li>
+            <li>✔ Building long-term, trust-based relationships</li>
+        </ul>
+    </div>
+
+    <!-- Get Started CTA -->
+    <div style="text-align: center;">
+        <h2 style="font-size: 1.8rem; margin-bottom: 16px;">Get Started Today</h2>
+        <p style="margin-bottom: 24px; color: #4a627a;">Take the next step toward your financial goals.</p>
+        <div class="cta-buttons">
+            <button class="btn-primary" id="createAccountBtn">Create your account</button>
+        </div>
+
+            </div>
+</div>
+
+<!-- ========== BLACK/DARK FOOTER SECTION ========== -->
+<footer class="dark-footer">
+    <div class="footer-container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>Koperasi<span>Finance</span></h3>
+                <p>Empowering financial growth with trust, integrity, and community-focused lending solutions since 2012.</p>
+                <div class="social-icons-dark">
+                    <span>f</span>
+                    <span>t</span>
+                    <span>i</span>
+                    <span>in</span>
+                </div>
+            </div>
+            <!-- Quick Links -->
+            <div class="footer-links-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#" data-footer="about">About Us</a></li>
+                    <li><a href="#" data-footer="loans">Loan Programs</a></li>
+                    <li><a href="#" data-footer="membership">Become a Member</a></li>
+                    <li><a href="#" data-footer="faq">FAQs</a></li>
+                    <li><a href="#" data-footer="careers">Careers</a></li>
+                </ul>
+            </div>
+            <!-- Legal & Resources -->
+            <div class="footer-links-col">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#" data-footer="privacy">Privacy Policy</a></li>
+                    <li><a href="#" data-footer="terms">Terms of Service</a></li>
+                    <li><a href="#" data-footer="complaints">Complaints Procedure</a></li>
+                    <li><a href="#" data-footer="calculator">Loan Calculator</a></li>
+                </ul>
+            </div>
+            <!-- Contact Info -->
+            <div class="footer-contact-col">
+                <h4>Get in Touch</h4>
+                <ul>
+                    <li>📍 Nairobi, Kenya | Thika Road</li>
+                    <li>📞  +254743409438</li>
+                    <li>📧 ahishakiyenaomi56@gmail.com</li>
+                    <li>🕒 Mon-Fri: 8:30 AM – 5:00 PM</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>© 2025 Koperasi Student Cooperative — All rights reserved.</div>
+            <div class="legal-links">
+                <a href="#" data-footer="privacy">Privacy</a>
+                <a href="#" data-footer="terms">Terms</a>
+                <a href="#" data-footer="accessibility">Accessibility</a>
+            </div>
+        </div>
+        <div class="small-print">
+            Koperasi Finance is a regulated SACCO. Loan approval subject to credit assessment and terms. Interest rates subject to change. We promote responsible borrowing.
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Helper for informational popups
+    const showInfo = (msg) => alert(msg);
+
+    // Portal / Apply Loan actions
+    const portalBtn = document.getElementById('portalBtn');
+    const applyLoanBtn = document.getElementById('applyLoanBtn');
+    const handlePortal = () => window.location.href = 'portal.html';
+    if(portalBtn) portalBtn.addEventListener('click', handlePortal);
+    if(applyLoanBtn) applyLoanBtn.addEventListener('click', handlePortal);
+    
+    const contactBtn = document.getElementById('contactUsBtn');
+    if(contactBtn) {
+        contactBtn.addEventListener('click', () => window.location.href = 'contact.html');
+    }
+    
+    // Create account button
+    const createAccountBtn = document.getElementById('createAccountBtn');
+    if(createAccountBtn) {
+        createAccountBtn.addEventListener('click', () => window.location.href = 'portal.html');
+    }
+    
+    // Footer link interactions
+    const footerLinkElements = document.querySelectorAll('.footer-links-col a, .footer-bottom .legal-links a');
+    footerLinkElements.forEach(link => {
+        link.addEventListener('click', (e) => {
+            const type = link.getAttribute('data-footer');
+            if(type === 'about') showInfo("Koperasi Finance: A member-owned cooperative offering fair loans and profit sharing. Building financial resilience.");
+            else if(type === 'loans') showInfo("Loan Programs: Non-member (12% interest) and Member (8% interest). Flexible repayment terms up to 12 months.");
+            else if(type === 'membership') showInfo("Membership: Join with low registration fee, enjoy lower interest rates and annual dividends.");
+            else if(type === 'faq') showInfo("FAQs: Minimum loan amount KES 5,000. No hidden fees. Early repayment allowed.");
+            else if(type === 'privacy') showInfo("Privacy Policy: Your data is protected under Kenyan law. We never share personal info without consent.");
+            else if(type === 'terms') showInfo("Terms: All loans subject to approval. Late fees apply after grace period. Read full terms on request.");
+            else if(type === 'complaints') showInfo("Complaints: Contact our support desk +254 700 123 456 or complaints@koperasi.co.ke");
+            else if(type === 'calculator') showInfo("Loan Calculator: Visit our portal to estimate monthly payments and total interest.");
+            else if(type === 'careers') showInfo("Careers: We're hiring! Send your CV to careers@koperasi.co.ke");
+            else if(type === 'accessibility') showInfo("Accessibility: Our offices and website are WCAG compliant. Need assistance? Call us.");
+            else showInfo("Visit our official website or contact support for more details.");
+        });
+    });
+    
+    // Social icons feedback
+    const socialIcons = document.querySelectorAll('.social-icons-dark span');
+    socialIcons.forEach(icon => {
+        icon.style.cursor = 'pointer';
+        icon.addEventListener('click', () => showInfo("🌐 Follow Koperasi Finance for updates, financial tips, and member events."));
+    });
+    
+    // Step cards interactive
+    const stepCards = document.querySelectorAll('.step');
+    stepCards.forEach(step => {
+        step.addEventListener('click', () => {
+            const stepText = step.innerText.trim();
+            showInfo(`Step ${stepText}: We ensure complete transparency and fast processing.`);
+        });
+    });
+    
+    console.log("Koperasi Finance | Home page loaded successfully");
+</script>
+</body>
+</html>
