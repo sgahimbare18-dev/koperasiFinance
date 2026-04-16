@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koperasi Finance - Member Portal</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; color: #2c3e50; }
+    .app-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .card { background: white; border-radius: 24px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 24px; }
+    .btn { background: #4544ab; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; }
+    .btn:hover { background: #3d3b9a; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(69,68,171,0.3); }
+    .btn.secondary { background: #6c757d; }
+    .btn.secondary:hover { background: #5a6268; }
+    .input { width: 100%; padding: 12px 16px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease; }
+    .input:focus { border-color: #4544ab; outline: none; box-shadow: 0 0 0 3px rgba(69,68,171,0.1); }
+    .flex-row { display: flex; gap: 12px; align-items: center; }
+    .user-info-panel { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 16px; margin-bottom: 24px; }
+    .badge { background: #28a745; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .logout-btn { background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; }
+    .google-btn { background: #4285f4; }
+    .google-btn:hover { background: #3367d6; }
+  </style>
+</head>
+<body>
+  <div class="app-container" id="appRoot"></div>
+
+  <script>
+    // Initialize Supabase
+    const supabase = window.supabase.createClient(
+      'https://vkcjwovhnmluzqkgqrbk.supabase.co',
+      'sb_publishable_d-klXw8ji6Q0lfm2T7rnTQ_c755YAT6'
+    );
+
+    // State management
+    let currentUser = null;
+    let loginFlowState = 'initial';
+
+    // LocalStorage fallback
+    const STORAGE = {
+      users: 'pro_koperasi_users',
+      contributions: 'pro_koperasi_contributions',
+      loans: 'pro_koperasi_loans',
+      payments: 'pro_koperasi_payments',
+      contracts: 'pro_koperasi_contracts'
+    };
+
+    // Initialize default users for demo
+    function initLocalStorage() {
+      if (!localStorage.getItem(STORAGE.users)) {
+        const defaultUsers = [
+          { id: 'm1', username: 'member1', password: '123', role: 'member', fullName: 'Aisha Nkosi', email: 'aisha.nkosi@student.edu', phone: '+254 712 345 678', idNumber: 'ID-987654', joinDate: '2024-01-15' },
+          { id: 'm2', username: 'member2', password: '123', role: 'member', fullName: 'Liam Van der Merwe', email: 'liam.v@student.edu', phone: '+254 723 456 789', idNumber: 'ID-876543', joinDate: '2024-02-10' },
+          { id: 'nm1', username: 'non1', password: '123', role: 'nonmember', fullName: 'James Ochieng', email: 'james.ochieng@external.com', phone: '+254 798 765 43', idNumber: 'ID-765432', address: 'Nairobi, Kenya' },
+          { id: 'treas', username: 'treasurer', password: 'admin', role: 'treasurer', fullName: 'Finance Officer', email: 'finance@koperasi.org', phone: '+254 700 000 000' }
+        ];
+        localStorage.setItem(STORAGE.users, JSON.stringify(defaultUsers));
+      }
+      if (!localStorage.getItem(STORAGE.contributions)) localStorage.setItem(STORAGE.contributions, '[]');
+      if (!localStorage.getItem(STORAGE.loans)) localStorage.setItem(STORAGE.loans, '[]');
+      if (!localStorage.getItem(STORAGE.payments)) localStorage.setItem(STORAGE.payments, '[]');
+      if (!localStorage.getItem(STORAGE.contracts)) localStorage.setItem(STORAGE.contracts, '[]');
+    }
+
+    // Data functions
+    function getUsers() { return JSON.parse(localStorage.getItem(STORAGE.users) || '[]'); }
+    function getContributions() { return JSON.parse(localStorage.getItem(STORAGE.contributions) || '[]'); }
+    function getLoans() { return JSON.parse(localStorage.getItem(STORAGE.loans) || '[]'); }
+    function getPayments() { return JSON.parse(localStorage.getItem(STORAGE.payments) || '[]'); }
+    function getContracts() { return JSON.parse(localStorage.getItem(STORAGE.contracts) || '[]'); }
+    function setContributions(d) { localStorage.setItem(STORAGE.contributions, JSON.stringify(d)); }
+    function setLoans(d) { localStorage.setItem(STORAGE.loans, JSON.stringify(d)); }
+    function setPayments(d) { localStorage.setItem(STORAGE.payments, JSON.stringify(d)); }
+    function setContracts(d) { localStorage.setItem(STORAGE.contracts, JSON.stringify(d)); }
+
+    // Authentication functions
+    async function signInWithGoogle() {
+      try {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin + '/portal-standalone.html'
+          }
+        });
+
+        if (error) {
+          throw new Error(`Google sign-in failed: ${error.message}`);
+        }
+
+        return data.user;
+      } catch (error) {
+        console.error('Google OAuth error:', error);
+        // Fallback to demo mode
+        return null;
+      }
+    }
+
+    // Render functions
+    function renderWelcomeScreen() {
+      return `
+        <div class="card" style="max-width: 600px; margin: 40px auto; text-align: center;">
+          <h1 style="margin-bottom: 40px; color: #4544ab; font-size: 2.5rem;">Koperasi Finance</h1>
+          <p style="margin-bottom: 32px; font-size: 1.1rem; color: #6c757d;">Are you a registered member?</p>
+          <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;">
+            <button class="btn" onclick="showMemberLogin()">Yes, I am a Member</button>
+            <button class="btn secondary" onclick="showNonMemberLogin()">No, I am a Non-Member</button>
+          </div>
+          <button class="btn google-btn" onclick="handleGoogleSignIn()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <svg width="20" height="20" viewBox="0 0 24 24">
+              <path fill="#ffffff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#ffffff" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            </svg>
+            Sign in with Google
+          </button>
+        </div>
+      `;
+    }
+
+    function renderMemberLoginScreen() {
+      return `
+        <div class="card" style="max-width: 450px; margin: 40px auto; text-align: center;">
+          <button class="logout-btn" onclick="showWelcome()" style="float: left;">← Back</button>
+          <h2 style="margin: 20px 0;">Member Sign In</h2>
+          <div style="margin-top: 20px;">
+            <input type="text" id="memberUsername" placeholder="Username" style="margin-bottom: 12px;" class="input" />
+            <input type="password" id="memberPassword" placeholder="Password" class="input" />
+            <button class="btn" onclick="handleMemberLogin()" style="margin-top: 20px; width: 100%;">Sign In</button>
+          </div>
+          <p style="margin-top: 24px; font-size: 0.7rem; background: #f4f9fe; padding: 12px; border-radius: 20px;">
+            <strong>Demo Credentials:</strong><br>
+            Member: member1 / 123 &nbsp;|&nbsp; member2 / 123<br>
+            Admin (Treasurer): treasurer / admin
+          </p>
+        </div>
+      `;
+    }
+
+    function renderNonMemberLoginScreen() {
+      return `
+        <div class="card" style="max-width: 450px; margin: 40px auto; text-align: center;">
+          <button class="logout-btn" onclick="showWelcome()" style="float: left;">← Back</button>
+          <h2 style="margin: 20px 0;">Non-Member Portal</h2>
+          <p style="color: #4a627a; margin-bottom: 24px;">Loan applications require signed contract</p>
+          <div style="margin-top: 20px;">
+            <input type="text" id="nonMemberUsername" placeholder="Username" style="margin-bottom: 12px;" class="input" />
+            <input type="password" id="nonMemberPassword" placeholder="Password" class="input" />
+            <button class="btn" onclick="handleNonMemberLogin()" style="margin-top: 20px; width: 100%;">Sign In</button>
+          </div>
+          <p style="margin-top: 24px; font-size: 0.7rem; background: #f4f9fe; padding: 12px; border-radius: 20px;">
+            <strong>Demo Credentials:</strong><br>
+            Non-Member: non1 / 123
+          </p>
+        </div>
+      `;
+    }
+
+    function renderMemberDashboard() {
+      const contributions = getContributions().filter(c => c.memberId === currentUser.id);
+      const loans = getLoans().filter(l => l.userId === currentUser.id);
+      const activeLoan = loans.find(l => l.status === 'active');
+      
+      return `
+        <div class="card">
+          <button class="logout-btn" onclick="handleLogout()">← Logout</button>
+          <div class="user-info-panel">
+            <div><strong>👤 ${currentUser.fullName}</strong><br><span style="font-size:0.75rem;">ID: ${currentUser.idNumber || currentUser.id} | ${currentUser.email || 'no email'}</span></div>
+            <div><span class="badge">Member · 8% Interest</span></div>
+          </div>
+          <h3>💰 Make Contribution</h3>
+          <div class="flex-row">
+            <input type="number" id="contribAmt" placeholder="Contribution amount $" class="input" style="flex: 1;" />
+            <button class="btn" onclick="handleContribution()">Contribute</button>
+          </div>
+          <h3>🏦 Apply for Loan</h3>
+          <div class="flex-row">
+            <input type="number" id="loanAmt" placeholder="Loan amount $" class="input" style="flex: 1;" />
+            <button class="btn" onclick="handleLoan()">Apply Loan (8%)</button>
+          </div>
+          ${activeLoan ? `
+            <div style="background:#eff6ff; border-radius:24px; padding:16px; margin-top:20px;">
+              <strong>📌 Active Loan:</strong> Remaining $${activeLoan.remainingBalance.toFixed(2)} · Monthly interest $${(activeLoan.remainingBalance*0.08).toFixed(2)}
+              <div class="flex-row">
+                <input type="number" id="repayVal" placeholder="Repayment $" class="input" style="flex: 1;" />
+                <button class="btn secondary" onclick="handleRepayment()">Repay</button>
+              </div>
+            </div>
+          ` : '<p>✅ No active loan</p>'}
+          <h3>📜 Recent Activity</h3>
+          <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
+            <tr style="background: #f8f9fa;"><th>Date</th><th>Type</th><th>Amount</th></tr>
+            ${contributions.slice(-4).reverse().map(c=>`<tr><td>${new Date(c.date).toLocaleDateString()}</td><td>Contribution</td><td>$${c.amount}</td></tr>`).join('')}
+            ${loans.slice(-4).reverse().map(l=>`<tr><td>${new Date(l.dateTaken).toLocaleDateString()}</td><td>Loan Payment</td><td>$${l.amount}</td></tr>`).join('')}
+          </table>
+        </div>
+      `;
+    }
+
+    // Navigation functions
+    function showWelcome() { loginFlowState = 'initial'; render(); }
+    function showMemberLogin() { loginFlowState = 'memberLogin'; render(); }
+    function showNonMemberLogin() { loginFlowState = 'nonmemberLogin'; render(); }
+
+    // Event handlers
+    async function handleGoogleSignIn() {
+      try {
+        const user = await signInWithGoogle();
+        if (user) {
+          currentUser = user;
+          loginFlowState = 'initial';
+          render();
+        } else {
+          alert('Google sign-in failed. Please try demo login instead.');
+        }
+      } catch (error) {
+        alert(`Google sign-in failed: ${error.message}`);
+      }
+    }
+
+    function handleMemberLogin() {
+      const username = document.getElementById('memberUsername').value.trim();
+      const password = document.getElementById('memberPassword').value.trim();
+      const users = getUsers();
+      const found = users.find(u => u.username === username && u.password === password && u.role === 'member');
+      
+      if (found) {
+        currentUser = found;
+        loginFlowState = 'initial';
+        render();
+      } else {
+        alert("Invalid member credentials");
+      }
+    }
+
+    function handleNonMemberLogin() {
+      const username = document.getElementById('nonMemberUsername').value.trim();
+      const password = document.getElementById('nonMemberPassword').value.trim();
+      const users = getUsers();
+      const found = users.find(u => u.username === username && u.password === password && u.role === 'nonmember');
+      
+      if (found) {
+        currentUser = found;
+        loginFlowState = 'initial';
+        render();
+      } else {
+        alert("Invalid non-member credentials");
+      }
+    }
+
+    function handleLogout() {
+      currentUser = null;
+      loginFlowState = 'initial';
+      render();
+    }
+
+    function handleContribution() {
+      const amount = parseFloat(document.getElementById('contribAmt').value);
+      if (amount <= 0) {
+        alert('Please enter a valid contribution amount.');
+        return;
+      }
+      
+      const contributions = getContributions();
+      contributions.push({
+        id: Date.now(),
+        memberId: currentUser.id,
+        amount: amount,
+        date: new Date().toISOString()
+      });
+      setContributions(contributions);
+      
+      alert(`Contribution of $${amount} recorded successfully!`);
+      document.getElementById('contribAmt').value = '';
+      render();
+    }
+
+    function handleLoan() {
+      const amount = parseFloat(document.getElementById('loanAmt').value);
+      if (amount <= 0) {
+        alert('Please enter a valid loan amount.');
+        return;
+      }
+      
+      const loans = getLoans();
+      const newLoan = {
+        id: Date.now(),
+        userId: currentUser.id,
+        amount: amount,
+        remainingBalance: amount,
+        status: 'active',
+        dateTaken: new Date().toISOString(),
+        interestRate: currentUser.role === 'member' ? 0.08 : 0.12
+      };
+      loans.push(newLoan);
+      setLoans(loans);
+      
+      alert(`Loan application for $${amount} submitted successfully!`);
+      document.getElementById('loanAmt').value = '';
+      render();
+    }
+
+    function handleRepayment() {
+      const amount = parseFloat(document.getElementById('repayVal').value);
+      const loans = getLoans();
+      const activeLoan = loans.find(l => l.userId === currentUser.id && l.status === 'active');
+      
+      if (!activeLoan || amount <= 0) {
+        alert('Invalid repayment amount.');
+        return;
+      }
+      
+      const payments = getPayments();
+      payments.push({
+        id: Date.now(),
+        loanId: activeLoan.id,
+        userId: activeLoan.userId,
+        amount: amount,
+        date: new Date().toISOString(),
+        paymentType: 'principal'
+      });
+      setPayments(payments);
+      
+      activeLoan.remainingBalance -= amount;
+      if (activeLoan.remainingBalance <= 0) {
+        activeLoan.status = 'completed';
+        activeLoan.remainingBalance = 0;
+      }
+      
+      setLoans(loans);
+      
+      alert(`Repayment of $${amount} recorded successfully!`);
+      document.getElementById('repayVal').value = '';
+      render();
+    }
+
+    // Main render function
+    function render() {
+      const root = document.getElementById('appRoot');
+      
+      if (loginFlowState === 'initial') {
+        if (currentUser) {
+          if (currentUser.role === 'member') {
+            root.innerHTML = renderMemberDashboard();
+          } else {
+            root.innerHTML = '<div class="card"><h2>Dashboard coming soon for this role</h2></div>';
+          }
+        } else {
+          root.innerHTML = renderWelcomeScreen();
+        }
+      } else if (loginFlowState === 'memberLogin') {
+        root.innerHTML = renderMemberLoginScreen();
+      } else if (loginFlowState === 'nonmemberLogin') {
+        root.innerHTML = renderNonMemberLoginScreen();
+      }
+    }
+
+    // Initialize app
+    initLocalStorage();
+    render();
+  </script>
+</body>
+</html>
